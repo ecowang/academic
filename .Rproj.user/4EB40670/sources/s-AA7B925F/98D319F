@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1507287348999.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3045524501",
+    "id" : "98D319F",
+    "lastKnownWriteTime" : 1507290303,
+    "last_content_update" : 1507290303245,
+    "path" : "~/hugoblog/config.toml",
+    "project_path" : "config.toml",
+    "properties" : {
+        "cursorPosition" : "178,17",
+        "scrollLine" : "155"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "toml"
+}
