@@ -1,0 +1,19 @@
+---
+title: just a test for pic
+author: wang qiang
+date: '2017-10-09'
+slug: just-a-test-for-pic
+categories:
+  - R
+tags: []
+---
+
+试一下中文。
+
+```{r}
+plot(1:10)
+```
+试一下画图
+```{r}
+knitr::include_graphics("/img/face.png")
+```
