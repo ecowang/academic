@@ -1,0 +1,267 @@
+---
+title: 学习R for data science - 01 数据可视化
+author: 王强
+date: '2017-09-25'
+slug: learn-r-for-data-science-01-data-visualization
+categories:
+  - R
+tags:
+  - R
+---
+
+# 引言
+
+学大神[Hadley Wickham](http://hadley.nz/)的[R for data science](http://r4ds.had.co.nz/)这本书，是本人现在的一个小目标。
+
+Hadley Wickham和[谢亦辉](http://yihui.name)都在Rstudio公司工作，也在多所大学任教，属于R这个领域发展过程中走在最前面的人。他写了很多厉害的包，比如`ggplot2`，一个用来作图的包，这个包现在已经形成了一个体系，出现了很多基于这个包在某个专门领域作图的包上包。还有`dplyr`，用于数据整理，可以实现excel里数据透视表的功能，而且灵活的多。
+
+[R for data science](http://r4ds.had.co.nz/)里面涉及一系列包，这些包被打包成[`tidyverse`](https://www.tidyverse.org/)包，里面数据整理、分析、作图、文本操作、建模等等功能都有涉及。这里按照作者安排的从易到难，从有趣到抓狂的顺序，先学习数据可视化。希望我能坚持到一半以上。
+
+
+> R for data science 是一本书，网址见上面。这本书是用bookdown的格式出的，即在github上有源码，然后编译成网站。
+
+> tidyverse是一系列R包的组合包，R for data science 的操作基本都是和这些包有关的，可以说是介绍这些包如何使用。当然有重点和非重点，hadley自己写的包比较重点。
+
+> R语言发展很快，现在是2017年，这本书也是2017年正式出版的。
+
+> 这一章主要学ggplot2这个包，用来作图，也就是数据可视化。
+
+
+# 书的结构
+
+这本书包括数据整理、数据变形、数据分析、可视化、建模等等很多内容，如下图：
+
+![](http://r4ds.had.co.nz/diagrams/data-science-explore.png)
+
+作者把这一部分放在前面，是因为这部分比较好学，而且可以接着就在分析中用上，效果比较直观——确实如此！只要你有要分析的数据。
+
+# 需要安装的包和分析涉及的数据
+
+首先要安装`tidyverse`包，使用`install.package`函数，会自动把相关的包都装上。
+
+
+主要用到的数据有2个，一个是`mpg`，一个是`diamonds`，都是包里自带的。
+
+```{r}
+library(tidyverse)
+mpg
+```
+
+可以看到mpg这个数据是`tibble`格式的汽车相关数据，有234行（cases），11个变量（variables）。分别是
+
+- **manufacturer** 品牌 `chr 文本`
+
+- **model**  model name 型号 `int 整数型`
+
+- **displ** engine displacement, in litres 排量 `dbl 数值型`
+
+- **year** year of manufacture 产出年份 `int 整数型`
+
+- **cyl**  number of cylinders 几缸的 `int 整数型`
+
+- **trans**  type of transmission 手动自动啥档的 `int 整数型`
+
+- **drv**  f = front-wheel drive, r = rear wheel drive, 4 = 4wd  前驱后驱还是四驱 `int 整数型`
+
+- **cty**  city miles per gallon 城市每升油跑的公里数 `int 整数型`
+
+- **hwy**  highway miles per gallon 高速每升油跑的公里数 `int 整数型`
+
+- **fl**  fuel type 烧啥油 `chr 文本`
+
+- **class** "type" of car 车型，紧凑的、中型的、豪华的、跑车、SUV、皮卡等等。。。 `chr 文本`
+
+
+另一个数据是关于钻石的。
+
+```{r}
+diamonds
+```
+这个关于53940个钻石的数据，有10个变量:
+
+- carat
+-- weight of the diamond (0.2–5.01) 几克拉，数值
+
+- price
+-- price in US dollars (\$326–\$18,823) 多少钱，整数
+
+- cut
+-- quality of the cut (Fair, Good, Very Good, Premium, Ideal) 切割质量，有序因子
+
+- color
+-- diamond colour, from J (worst) to D (best) 颜色等级，有序因子
+
+- clarity
+-- a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best)) 透光度，有序因子
+
+- x
+-- length in mm (0–10.74)，数值变量
+
+- y
+-- width in mm (0–58.9)，数值变量
+
+- z
+-- depth in mm (0–31.8)，数值变量
+
+- depth
+-- total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)，深高百分比，数值变量，这个是算出来的
+
+- table
+-- width of top of diamond relative to widest point (43–95)桌面百分比，数值变量。
+
+
+> PS，我相信钻石的魅力全是商家宣传出来的，这玩意儿既不保值，也不保险，fbb带的鸽子蛋也保不齐要。。。
+
+其实我们可以先自己想想如果自己手头拿到这样的数据会从什么角度分析。。。
+
+# 各种作图，各种分析
+
+## 第一步，先做个图，了解ggplot函数
+
+比如我们想知道不同排量的车，与其高速上每升油跑的公里数之间的关系，则：
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+可以预见的，肯定排量越大，一升油跑的距离越短。后面会分析离群值，不同品牌等内容，这里我们先仔细看看这句作图函数。
+
+ggplot2的核心理念是图层作图，因为每一层相对独立，所以更具有灵活性；图层之间叠加靠“+”实现，越后面图层越高。上面的语句其实就是：
+
+> - ggplot(data = mpg) 注意！我要画图了，画板已经摆好，数据就从mpg里找！然后，+
+
+> - geom_point(mapping = aes(x = displ, y = hwy)) 嚎，我来画点（geom_point已经说明了，几何，点）！加一层！aes代表美学（esthetics），aes用来明确xy选什么数据来画。
+
+> - ggplot2有一系列的geom_XXX函数，可以加不同样式的图层。每一个这样的函数都需要mapping参数，这是用来确定变量怎么画图的，而mapping总是需要aes()，aes()需要x，y。。。
+
+> - 重要的事情再说一遍，geom_XXX需要mapping，mapping需要aes，aes需要x，y。ggplot(data = <DATA>) + <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+
+在[ggplot2: Elegant Graphics for Data Analysis ](https://www.amazon.com/dp/0387981403/ref=cm_sw_su_dp?tag=ggplot2-20)一书中，Hadley先介绍的qplot函数，这也是ggplot2里面的一个函数，q代表quick，上面的图用qplot也可以实现：
+
+```{r}
+qplot(displ, hwy, data=mpg)
+```
+
+
+这个和r里面plot函数比较像，不过用习惯了还是ggplot方便，因为这种方法体现的思考方式比较流畅。
+
+
+## 进阶一点，复杂一点
+
+观察上图，我们发现有几个高排量的车，油耗不太高，见下图红点所示。
+
+![](http://r4ds.had.co.nz/visualize_files/figure-html/unnamed-chunk-6-1.png)
+可以想一下，排量大，没升油跑的里程数还挺多，这。。。应该是跑车吧？显然这应该和车型有关，即class。如果能把不同车型用不同颜色、或符号表示就能看出来了：
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+一看，果然，右上角这几个是2seater跑车。
+
+前面说了，aes是美学的缩写，也就是说关于表现方式的调整都在这里实现，上面是在定义了aes里面xy的基础上，加上了对color的定义，其实也可以定义大小、形状、透明度等等。
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, shape = class))
+```
+
+上图是用不同形状表示不同车型。要注意形状最多只能表示6种，所以SUV没有被表现出来。
+
+注意，变量对颜色的控制要放在aes里面，如果想要整体控制，就放倒外面。
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
+
+如果放到里面：
+
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+```
+
+因为在aes里面，在mpg里去找blue这个变量，找不到，就把blue当成一个新的因子，赋予了粉红色。
+
+## 分面 facet
+
+刚才我们研究了不同车型排量和单升公里数的关系，用不同颜色表示清晰了一些，但如果想看每一个车型有什么趋势还不明显。这就需要把每个车型拿出来单独作图，分面就是用来干这个活的。
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+```
+
+
+可以看到，前面一样，后面用➕，加上了这么一段facet_wrap(~ class, nrow = 2)
+
+～class的意思，就是按照class进行分面，nrow=2，排两行。
+
+有时候不知想按一个变量分面，比如我想看看不同缸数（cyl）、不一样驱动方式的车（drv），排量和单升公里数的关系，可以用另一个分面函数`facet_grid()`。
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_grid(drv ~ cyl)
+```
+
+
+## 拟合曲线
+
+发论文吧，不拟合个曲线，就跟不专业一样。如果你是审稿专家，一样的论文是希望看到上面的散点图，还是下面这样的？
+
+![](http://r4ds.had.co.nz/visualize_files/figure-html/unnamed-chunk-23-1.png)
+
+这叫升华了。
+
+比较上面的散点图和下图：
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+注意了！明显的，geom_smooth对xy做了统计变换。下面引用原话：
+
+> Each plot uses a different visual object to represent the data. In ggplot2 syntax, we say that they use different **geoms**.
+
+> A **geom** is the geometrical object that a plot uses to represent data. 
+
+不同的geom，就是不同的表现数据的对象。
+
+```{r}
+geom_smooth
+geom_point
+```
+
+可以看到，每一个geom里面都有各stat，point的stat="identity"，smooth的stat = "smooth"，identity就是数数，smooth就是平滑拟合。
+
+```{r}
+stat_identity
+stat_smooth
+```
+
+神奇的事情发生了，两个stat里面有geom参数，一个是point，一个是smooth。
+
+明白了这一点，两条路选一条就可以了，用geom。同样是在aes里面，可以对线型进行控制，比如对不同驱动方式的车分类拟合。
+
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
+```
+
+还能更清楚一点。
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x=displ, y=hwy, color=drv)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv, color = drv))
+```
+
+
+# 小结
+
+1. ggplot()作出底板，geom_XXX层层叠加。
+2. geom里又stat，stat其实是geom的一体两面。

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.27.1" />
+  <meta name="author" content="王强">
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+
+
+  
+
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+
+  <link rel="alternate" href="" type="application/rss+xml" title="生态网">
+  <link rel="feed" href="" type="application/rss+xml" title="生态网">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="/tags/r-basics/">
+
+  
+
+  <title>R Basics | 生态网</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">生态网</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+
+
+
+<div class="universal-wrapper">
+
+  <h1>R Basics</h1>
+
+  
+
+  
+  
+  <div>
+    <h2><a href="/post/r-for-data-science-03-some-basics/">学习R for data science - 03 一些基础操作</a></h2>
+    <div class="article-style">
+      
+      按照原书的结构，真的是先讲图形，又讲基础，据作者说是为了先激发兴趣。这里基于其第四章，做一个汇总。但不局限于书中内容，而是通过自己踩过的坑，尽量先讲需求，再谈实现。
+1. 需要安装的软件和需要了解的工具链 1.1 需要安装的软件 R基础程序，从cran下载 R语言是一种语言，这种语言比较特殊，在设计之初就是为了统计而生的。这既是它的优势也是它的劣势。优势在于善于统计分析，劣势在于除了统计分析，你想干点别的，比如用它做个游戏玩就比较难以实现。
+运行R语言需要下载一个安装包，要到其官方网站去下载。
+这就是R的官方网站，也就是开发R的core team放新版本，组织资源的地方。暂时不想了解太多的话，直接点击download R，就会出来一个列表。 这个列表就是上一个页面左侧的cran（The Comprehensive R Archive Network），就是各个国家的服务器，用来放置R网站的镜像的（这样万一那个服务器受到损毁，不至于无处恢复），中国也有好几个。点进去，找到合适自己的版本下载就行了，不管是windows，mac，还是linux都有相应的版本。
+安装了r基础程序后，打开以后是这个样子，这是控制台。 其实现在就可以在里面敲打一些代码了，比如1+1。但实际工作中不可能一直在控制台里零敲碎打，需要把代码集中放到编辑器里，等到使用的时候再传给控制台去运行。R自带的编辑器是像下面这样的，这个场景就是在编辑器里写了几行代码，然后摁ctrl+enter（win），或command+return（mac），把代码送到控制台运行。
+但r自带的编辑器功能不是太多，比如我们想要代码高亮、自动补全，这些都没有，更别提直接代码和运行结果混合编辑，直接出pdf网页或word，甚至直接发布到网站了，所以我们还需要安装别的软件。
+ rstudio，从rstudio公司网站下载 rstudio有编辑器的功能，但不止于此。到官网下载，从product里找Rstudio，然后找desktop（与sever对应），然后选free的就可以了。安装以后用起来大概是这样的：
+看看也能大概明白，左上角正在写的就是编辑区，Rstudio的好处在于可以文字和代码混编，比如我现在写的基本都是文字，需要插入代码的话，写个{r}就可以了，结束了再写个表示写完了。
+这是需要表达的时候要掌握的内容，目前只需要知道，左上这一块是编辑器可以写代码，左下是控制台可以运行代码，右上是环境等等告诉你统计的过程中产生了哪些对象，右下是涉及的目录、文件、包等等告诉你用了什么包和存读了哪些文件。
+  1.2 接下来了解一串工具链 下载了软件，相当于准备好了主要工具，但在使用过程中还涉及一些其他内容，组成了一串工具链，主要包括不同的包和文档编写工具。
+比如我分析了一点白榆的数据。在这个简单的分析过程中，涉及整理、清洗、变形、统计、做图等多个环节，这就需要不同的包（package）。包是基于R语言开发的发挥特定功能的组件，如果说R是中央政府的话，包就是不同的职能部门，负责不同方面的业务。cran对其收编的包（为啥说收编呢，因为还有些不在cran里的）有按领域的归纳，叫task view。这个挺好，多看看可以达到对业务领域和统计方法的相互促进。
+还有github，为什么前面说收编的包，就是因为有很多包也精彩，但没编制，所以需要直接在github上下载。有些收编的包，其最新版也是在github上。这个暂时涉及不到，知道有这回事就好了。另外如果想做静态网站，也需要使用github，之前写了一个使用jekyll做网站的流程，可以参考。
+如果想把分析结果表达出来，还需要了解Rmarkdown，blogdown等内容，要稍微了解一点knitr的运作机制，不然的话出错不知道如何应对。
+这些顺带一说，第一步只需要装好R和Rstudio，就可以进行一些基本操作了。
+  2. R 语言的一些基本操作 基本操作包括：
+ 当做计算器，进行加减乘除等等。 赋值、读取数据 使用r语言自带的函数 加载特定包，使用包里的函数  2.1 当计算器进行运算 这个比较简单，运算符号在各种语言包括excel里都差不多。
+1 / 200 * 30 ## [1] 0.15 (59 + 73 + 2) / 3 ## [1] 44.66667 sin(pi / 2) ## [1] 1  2.
+      
+    </div>
+  </div>
+  
+
+  
+
+
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 王强 &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+

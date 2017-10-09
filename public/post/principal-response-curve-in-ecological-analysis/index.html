@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.27.1" />
+  <meta name="author" content="王强">
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+
+
+  
+
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+
+  <link rel="alternate" href="" type="application/rss+xml" title="生态网">
+  <link rel="feed" href="" type="application/rss+xml" title="生态网">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="/post/principal-response-curve-in-ecological-analysis/">
+
+  
+
+  <title>使用主响应曲线方法（principal response curve analysis）分析刺槐数据 | 生态网</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">生态网</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">使用主响应曲线方法（principal response curve analysis）分析刺槐数据</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2015-01-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2015-01-22
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    2 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/%e7%bb%9f%e8%ae%a1-%e7%94%9f%e6%80%81">统计 生态</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e4%bd%bf%e7%94%a8%e4%b8%bb%e5%93%8d%e5%ba%94%e6%9b%b2%e7%ba%bf%e6%96%b9%e6%b3%95%ef%bc%88principal%20response%20curve%20analysis%ef%bc%89%e5%88%86%e6%9e%90%e5%88%ba%e6%a7%90%e6%95%b0%e6%8d%ae&amp;url=%2fpost%2fprincipal-response-curve-in-ecological-analysis%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fprincipal-response-curve-in-ecological-analysis%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fprincipal-response-curve-in-ecological-analysis%2f&amp;title=%e4%bd%bf%e7%94%a8%e4%b8%bb%e5%93%8d%e5%ba%94%e6%9b%b2%e7%ba%bf%e6%96%b9%e6%b3%95%ef%bc%88principal%20response%20curve%20analysis%ef%bc%89%e5%88%86%e6%9e%90%e5%88%ba%e6%a7%90%e6%95%b0%e6%8d%ae"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2fprincipal-response-curve-in-ecological-analysis%2f&amp;title=%e4%bd%bf%e7%94%a8%e4%b8%bb%e5%93%8d%e5%ba%94%e6%9b%b2%e7%ba%bf%e6%96%b9%e6%b3%95%ef%bc%88principal%20response%20curve%20analysis%ef%bc%89%e5%88%86%e6%9e%90%e5%88%ba%e6%a7%90%e6%95%b0%e6%8d%ae"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e4%bd%bf%e7%94%a8%e4%b8%bb%e5%93%8d%e5%ba%94%e6%9b%b2%e7%ba%bf%e6%96%b9%e6%b3%95%ef%bc%88principal%20response%20curve%20analysis%ef%bc%89%e5%88%86%e6%9e%90%e5%88%ba%e6%a7%90%e6%95%b0%e6%8d%ae&amp;body=%2fpost%2fprincipal-response-curve-in-ecological-analysis%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      <p>说起来，主响应曲线分析已经帮了自己2次了。一次是发表了一篇SCI论文，即Using microbial community functioning as the complementary environmental condition indicator，用来分析了BIOLOG数据，另一次就是在窄冠刺槐的课题中用了这种方法，增强了点科技感。搜了搜似乎网上还没有针对生态学分析中利用这种方法的中文的介绍，这里简单写一下，当作自己网站的第一篇原创文章。</p>
+<div class="section level1">
+<h1>一、分析目标</h1>
+<p>针对多元数据，且在一个时间段内有连续的记录，分析在这个过程中有整体什么差异，且能展现这些差异是由哪些指标主要引起的。 这么说有点抽象，举个例子吧。比如有6个不同刺槐品种，从种下来开始，就测量胸径、树高、郁闭度、枝下高等指标，每年测量，一直测量了10年。不同品种肯定有差异，但这些差异在这10年里是怎么变化的呢？当然我可以单独拿出一个指标来，比如胸径，比较十年的变化，但这种比较不具有整体性。为了从整体上把不同品种的生长特征在这10年间的变化刻画出来，就可以使用PRC方法。它其实是一种基于降维的方法，在刻画出每个时间节点的主要特征后，在时间序列上表现出来。出处是Principal Response Curves: Analysis of Time-dependent Multivariate Responses of a Biological Community to Stress.van den Brink, P. J. &amp; ter Braak, C. J. F. (1999)。</p>
+</div>
+<div class="section level1">
+<h1>二、数据准备</h1>
+<p>数据准备，行为case，列为variable。即行是测定对象，列是指标。</p>
+<pre class="r"><code>cihuai = read.table(&quot;PRC analysis data.txt&quot;, header = T, sep=&quot;\t&quot;, fileEncoding=&quot;UTF-16&quot;)
+head(cihuai)</code></pre>
+<pre><code>##        X dens hight  DBH Crown UBhigh Closure
+## 1 c1-1-1  833  1.55 1.29  0.52   0.39    0.05
+## 2 c1-1-2  833  1.59 1.31  0.53   0.40    0.05
+## 3 c1-1-3  833  1.61 1.32  0.54   0.41    0.05
+## 4 c2-1-1  833  1.34 1.17  0.69   0.31    0.06
+## 5 c2-1-2  833  1.34 1.16  0.68   0.30    0.06
+## 6 c2-1-3  833  1.35 1.15  0.68   0.30    0.06</code></pre>
+<p>上面是从R中数据准备。要注意R中的行名不能重复，因此重复测定用1、2、3区别；此外，最少3个重复，否则无法进行分析。</p>
+</div>
+<div class="section level1">
+<h1>三、分析过程</h1>
+<p>分析在R语言中进行，需要用到vegan包。</p>
+<pre class="r"><code>library(vegan)</code></pre>
+<pre><code>## Loading required package: permute</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## This is vegan 2.4-3</code></pre>
+<pre class="r"><code>?prc #查看prc用法</code></pre>
+<p>可以知道PRC分析的作用、操作方法和实例。看例子是个好方法，很多抽象的东西看了也不大容易理解，比着葫芦画瓢还是要容易点。</p>
+<p>主要函数参数有3个：</p>
+<blockquote>
+<p>prc(response, treatment, time, …)</p>
+</blockquote>
+<p>其中response就是前面说的要准备的数据，treatment是对数据进行的不同处理。如我们刺槐课题，为了比较不同造林模型、不同品种的生长差异，treatment就是不同的造林模型和品种。time是时间，我们这里就是不同的年份。</p>
+<p>treatment和time都是用来表示response中的case属于哪种处理，哪个时间点的。如我们刺槐课题，6个处理，每个处理3个重复，18行，6年时间，108行，108个case。treatment和time是这样对应的：</p>
+<pre class="r"><code>year = gl(6, 18, labels =  c(1, 2, 3, 4, 5, 6))
+model = factor(rep(c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6), 6))
+cihuai = cihuai[,c(3,4,5,6,7)]</code></pre>
+<p>数据准备好以后就可以分析了，很简单的运行一下prc函数即可。 分析结果可以用summary函数查看，并可以作图直观的看。</p>
+<pre class="r"><code>prc.res = prc(cihuai, model, year)
+summary(prc.res)</code></pre>
+<pre><code>## 
+## Call:
+## prc(response = cihuai, treatment = model, time = year) 
+## Species scores:
+##    hight      DBH    Crown   UBhigh  Closure 
+## -1.67534 -1.44184  1.72381 -0.12213  0.09386 
+## 
+## Coefficients for model + year:model interaction
+## which are contrasts to model 1 
+## rows are model, columns are year
+##           1        2       3        4        5        6
+## 2  0.113009  0.21485 0.40963  0.47693  0.85738  0.68115
+## 3 -0.034011 -0.01106 0.02047 -0.02575 -0.07068 -0.25617
+## 4  0.096995  0.22350 0.42223  0.52569  0.90177  0.36801
+## 5 -0.006548 -0.02215 0.14721 -0.04523 -0.07626 -0.08072
+## 6  0.108332  0.23707 0.42406  0.58273  0.76250  0.44390</code></pre>
+<pre class="r"><code>plot(prc.res)</code></pre>
+<p><img src="/post/2015-01-22-principal-response-curve-in-ecological-analysis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>从图上可以发现不同模型在历年来有什么差异，并通过对照右边的指标，知道这些差异主要是由什么引起的。</p>
+</div>
+<div class="section level1">
+<h1>四、注意事项</h1>
+<p>有时候需要对数据进行中心化和标准化，以使出来的图更清晰美观。</p>
+</div>
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="/post/2015-10-15-managing-international-financial-orgnization-loan-project/"><span
+      aria-hidden="true">&larr;</span> </a></li>
+    
+
+    
+    <li class="next"><a href="/post/managing-international-financial-orgnization-loan-project/">国际金融组织贷款项目管理流程 <span
+      aria-hidden="true">&rarr;</span></a></li>
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 王强 &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+

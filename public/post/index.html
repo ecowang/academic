@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme" content="hugo-academic">
-  <meta name="generator" content="Hugo 0.29" />
+  <meta name="generator" content="Hugo 0.27.1" />
   <meta name="author" content="王强">
-  <meta name="description" content="高工">
+  
 
   
   
@@ -133,7 +133,7 @@
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="/post/just-a-test-for-pic/" itemprop="url">just a test for pic</a>
+    <a href="/post/r-for-data-science-03-some-basics/" itemprop="url">学习R for data science - 03 一些基础操作</a>
   </h3>
   
 
@@ -141,141 +141,8 @@
 
   <span class="article-date">
     
-    <time datetime="2017-10-09 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2017-10-09
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    1 min read
-  </span>
-  
-
-  
-  
-  
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/r">R</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    <p>试一下中文。</p>
-<pre class="r"><code>plot(1:10)</code></pre>
-<p><img src="/post/2017-10-09-just-a-test-for-pic_files/figure-html/unnamed-chunk-1-1.png" width="672" /> 试一下画图</p>
-<pre class="r"><code>knitr::include_graphics(&quot;/img/face.png&quot;)</code></pre>
-<p><img src="/img/face.png" /><!-- --></p>
-
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/just-a-test-for-pic/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-    
-    
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <a href="/post/getting-started/">
-    <img src="/img/headers/getting-started.png" class="article-banner" itemprop="image">
-  </a>
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/getting-started/" itemprop="url">Getting started with the Academic framework for Hugo</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-        Last updated on
-    
-    <time datetime="2016-04-20 00:00:00 &#43;0800 CST" itemprop="datePublished">
-      2017-09-03
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    8 min read
-  </span>
-  
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/tags/academic">academic</a
-    >, 
-    
-    <a href="/tags/hugo">hugo</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    <p>Create a beautifully simple personal or academic website in under 10 minutes.</p>
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/getting-started/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-    
-    
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/widgets/" itemprop="url">Customizing the homepage with widgets</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2016-04-19 00:00:00 &#43;0800 CST" itemprop="datePublished">
-      2016-04-19
+    <time datetime="2017-09-29 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-09-29
     </time>
   </span>
 
@@ -286,6 +153,17 @@
   
 
   
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
 
   
   
@@ -293,10 +171,10 @@
   <span class="article-tags">
     <i class="fa fa-tags"></i>
     
-    <a href="/tags/academic">academic</a
+    <a href="/tags/r">R</a
     >, 
     
-    <a href="/tags/hugo">hugo</a
+    <a href="/tags/r-basics">R basics</a
     >
     
   </span>
@@ -309,11 +187,27 @@
 
   <div class="article-style" itemprop="articleBody">
     
-    <p>Enable/disable and configure widgets to customize your homepage.</p>
+    按照原书的结构，真的是先讲图形，又讲基础，据作者说是为了先激发兴趣。这里基于其第四章，做一个汇总。但不局限于书中内容，而是通过自己踩过的坑，尽量先讲需求，再谈实现。
+1. 需要安装的软件和需要了解的工具链 1.1 需要安装的软件 R基础程序，从cran下载 R语言是一种语言，这种语言比较特殊，在设计之初就是为了统计而生的。这既是它的优势也是它的劣势。优势在于善于统计分析，劣势在于除了统计分析，你想干点别的，比如用它做个游戏玩就比较难以实现。
+运行R语言需要下载一个安装包，要到其官方网站去下载。
+这就是R的官方网站，也就是开发R的core team放新版本，组织资源的地方。暂时不想了解太多的话，直接点击download R，就会出来一个列表。 这个列表就是上一个页面左侧的cran（The Comprehensive R Archive Network），就是各个国家的服务器，用来放置R网站的镜像的（这样万一那个服务器受到损毁，不至于无处恢复），中国也有好几个。点进去，找到合适自己的版本下载就行了，不管是windows，mac，还是linux都有相应的版本。
+安装了r基础程序后，打开以后是这个样子，这是控制台。 其实现在就可以在里面敲打一些代码了，比如1+1。但实际工作中不可能一直在控制台里零敲碎打，需要把代码集中放到编辑器里，等到使用的时候再传给控制台去运行。R自带的编辑器是像下面这样的，这个场景就是在编辑器里写了几行代码，然后摁ctrl+enter（win），或command+return（mac），把代码送到控制台运行。
+但r自带的编辑器功能不是太多，比如我们想要代码高亮、自动补全，这些都没有，更别提直接代码和运行结果混合编辑，直接出pdf网页或word，甚至直接发布到网站了，所以我们还需要安装别的软件。
+ rstudio，从rstudio公司网站下载 rstudio有编辑器的功能，但不止于此。到官网下载，从product里找Rstudio，然后找desktop（与sever对应），然后选free的就可以了。安装以后用起来大概是这样的：
+看看也能大概明白，左上角正在写的就是编辑区，Rstudio的好处在于可以文字和代码混编，比如我现在写的基本都是文字，需要插入代码的话，写个{r}就可以了，结束了再写个表示写完了。
+这是需要表达的时候要掌握的内容，目前只需要知道，左上这一块是编辑器可以写代码，左下是控制台可以运行代码，右上是环境等等告诉你统计的过程中产生了哪些对象，右下是涉及的目录、文件、包等等告诉你用了什么包和存读了哪些文件。
+  1.2 接下来了解一串工具链 下载了软件，相当于准备好了主要工具，但在使用过程中还涉及一些其他内容，组成了一串工具链，主要包括不同的包和文档编写工具。
+比如我分析了一点白榆的数据。在这个简单的分析过程中，涉及整理、清洗、变形、统计、做图等多个环节，这就需要不同的包（package）。包是基于R语言开发的发挥特定功能的组件，如果说R是中央政府的话，包就是不同的职能部门，负责不同方面的业务。cran对其收编的包（为啥说收编呢，因为还有些不在cran里的）有按领域的归纳，叫task view。这个挺好，多看看可以达到对业务领域和统计方法的相互促进。
+还有github，为什么前面说收编的包，就是因为有很多包也精彩，但没编制，所以需要直接在github上下载。有些收编的包，其最新版也是在github上。这个暂时涉及不到，知道有这回事就好了。另外如果想做静态网站，也需要使用github，之前写了一个使用jekyll做网站的流程，可以参考。
+如果想把分析结果表达出来，还需要了解Rmarkdown，blogdown等内容，要稍微了解一点knitr的运作机制，不然的话出错不知道如何应对。
+这些顺带一说，第一步只需要装好R和Rstudio，就可以进行一些基本操作了。
+  2. R 语言的一些基本操作 基本操作包括：
+ 当做计算器，进行加减乘除等等。 赋值、读取数据 使用r语言自带的函数 加载特定包，使用包里的函数  2.1 当计算器进行运算 这个比较简单，运算符号在各种语言包括excel里都差不多。
+1 / 200 * 30 ## [1] 0.15 (59 + 73 + 2) / 3 ## [1] 44.66667 sin(pi / 2) ## [1] 1  2.
     
   </div>
   <p class="read-more">
-    <a href="/post/widgets/" class="btn btn-primary btn-outline">
+    <a href="/post/r-for-data-science-03-some-basics/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>
@@ -327,7 +221,7 @@
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="/post/managing-content/" itemprop="url">Managing content</a>
+    <a href="/post/r-for-data-science-02-data-visualization/" itemprop="url">学习R for data science - 02 数据可视化</a>
   </h3>
   
 
@@ -335,125 +229,14 @@
 
   <span class="article-date">
     
-    <time datetime="2016-04-18 00:00:00 &#43;0800 CST" itemprop="datePublished">
-      2016-04-18
+    <time datetime="2017-09-26 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-09-26
     </time>
   </span>
 
   
   <span class="article-reading-time">
-    7 min read
-  </span>
-  
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/tags/academic">academic</a
-    >, 
-    
-    <a href="/tags/hugo">hugo</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    <p>This is a brief guide to managing content with the Academic framework. Content can include publications, projects, talks, and news/blog articles. After you have read this guide about creating and managing content, you may also be interested to learn about <a href="/post/writing-markdown-latex/" target="_blank">writing content with Markdown, LaTeX, and Shortcodes</a>.</p>
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/managing-content/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-    
-    
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/writing-markdown-latex/" itemprop="url">Writing content with Markdown, LaTeX, and Shortcodes</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2016-04-17 00:00:00 &#43;0800 CST" itemprop="datePublished">
-      2016-04-17
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    7 min read
-  </span>
-  
-
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    <p>Content can be written using <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a>, <a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank">LaTeX math</a>, and <a href="http://gohugo.io/extras/shortcodes/" target="_blank">Hugo Shortcodes</a>. Additionally, HTML may be used for advanced formatting. This article gives an overview of the most common formatting options.</p>
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/writing-markdown-latex/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-    
-    
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/2015-07-23-r-rmarkdown/" itemprop="url">Hello R Markdown</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2015-07-23 21:13:14 -0500 -0500" itemprop="datePublished">
-      2015-07-23
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    1 min read
+    2 min read
   </span>
   
 
@@ -476,13 +259,10 @@
   <span class="article-tags">
     <i class="fa fa-tags"></i>
     
-    <a href="/tags/r-markdown">R Markdown</a
+    <a href="/tags/r">R</a
     >, 
     
-    <a href="/tags/plot">plot</a
-    >, 
-    
-    <a href="/tags/regression">regression</a
+    <a href="/tags/data-visualization">Data visualization</a
     >
     
   </span>
@@ -495,13 +275,15 @@
 
   <div class="article-style" itemprop="articleBody">
     
-    R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.
+    书接上回，从拟合曲线到花样叠加 ggplot作图可以多图层叠加，拟合的曲线也是叠加的一层图，也就是从画板（ggplot）开始 +画点（geom_point()）再＋画曲线（geom_smooth()）。也就是说
+ 想要多的图层，就用加号增加geom_XXX函数就行了
+ 明白了这种操作，能做的事情就多了。而且不仅如此，还有很多其他灵活性和功能——让我们再从假设需求开始：
+上面我们用下面的代码做出了这个图，看排量displ和每加仑高速公里数hwy的关系：
+library(ggplot2) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + geom_smooth(mapping = aes(x = displ, y = hwy)) ## `geom_smooth()` using method = &#39;loess&#39; 然后假设我们又想看看几缸的和高速公里数的关系，按说应该老老实实地把上面代码中的displ换成cyl，不过作者说了，这样的话，你需要换两个地方，可能会遗漏。。。把mapping放到ggplot函数里，让它作为一个“全局变量”多好，换一个地方就行了嘛！
     
   </div>
   <p class="read-more">
-    <a href="/post/2015-07-23-r-rmarkdown/" class="btn btn-primary btn-outline">
+    <a href="/post/r-for-data-science-02-data-visualization/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>
@@ -515,7 +297,7 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
   
   
   <h3 class="article-title" itemprop="name">
-    <a href="/post/migrate-from-jekyll/" itemprop="url">Migrate from Jekyll to Hugo</a>
+    <a href="/post/learn-r-for-data-science-01-data-visualization/" itemprop="url">学习R for data science - 01 数据可视化</a>
   </h3>
   
 
@@ -523,8 +305,152 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
 
   <span class="article-date">
     
-    <time datetime="2014-03-10 00:00:00 &#43;0800 CST" itemprop="datePublished">
-      2014-03-10
+    <time datetime="2017-09-25 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-09-25
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    6 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    引言 学大神Hadley Wickham的R for data science这本书，是本人现在的一个小目标。
+Hadley Wickham和谢亦辉都在Rstudio公司工作，也在多所大学任教，属于R这个领域发展过程中走在最前面的人。他写了很多厉害的包，比如ggplot2，一个用来作图的包，这个包现在已经形成了一个体系，出现了很多基于这个包在某个专门领域作图的包上包。还有dplyr，用于数据整理，可以实现excel里数据透视表的功能，而且灵活的多。
+R for data science里面涉及一系列包，这些包被打包成tidyverse包，里面数据整理、分析、作图、文本操作、建模等等功能都有涉及。这里按照作者安排的从易到难，从有趣到抓狂的顺序，先学习数据可视化。希望我能坚持到一半以上。
+ R for data science 是一本书，网址见上面。这本书是用bookdown的格式出的，即在github上有源码，然后编译成网站。
+  tidyverse是一系列R包的组合包，R for data science 的操作基本都是和这些包有关的，可以说是介绍这些包如何使用。当然有重点和非重点，hadley自己写的包比较重点。
+  R语言发展很快，现在是2017年，这本书也是2017年正式出版的。
+  这一章主要学ggplot2这个包，用来作图，也就是数据可视化。
+  书的结构 这本书包括数据整理、数据变形、数据分析、可视化、建模等等很多内容，如下图：
+ 作者把这一部分放在前面，是因为这部分比较好学，而且可以接着就在分析中用上，效果比较直观——确实如此！只要你有要分析的数据。
+ 需要安装的包和分析涉及的数据 首先要安装tidyverse包，使用install.package函数，会自动把相关的包都装上。
+主要用到的数据有2个，一个是mpg，一个是diamonds，都是包里自带的。
+library(tidyverse) ## Loading tidyverse: ggplot2 ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats mpg ## # A tibble: 234 x 11 ## manufacturer model displ year cyl trans drv cty hwy ## &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; ## 1 audi a4 1.
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/learn-r-for-data-science-01-data-visualization/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/analysing-elm-data-with-r/" itemprop="url">使用R语言分析白榆生长数据</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-09-23 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-09-23
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/%e7%bb%9f%e8%ae%a1-%e4%ba%ba%e5%b7%a5%e6%9e%97">统计 人工林</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    1. 数据初步整理 使用白榆生长数据。指标分别有：品系号、生长地点、环境盐碱度（低中高三种）、树高、胸径、东西冠幅、南北冠幅，为2017年测定。
+在excel里整理数据，导出为csv格式，存在R工作目录下，进行操作。如果在windows下，使用read.csv 即可，但苹果中需要另外一种形式。
+ 后来发现是自己忘了加引号了。。。
+ all.data = read.table(&quot;all.data.demo.txt&quot;, header = T, sep=&quot;\t&quot;, fileEncoding=&quot;UTF-16&quot;) head(all.data) ## X spe high dbh ew sn loca salt ## 1 1 58 5.04 6.2 2.12 2.90 河口 低 ## 2 2 58 4.85 6.0 1.86 2.05 河口 低 ## 3 3 58 4.83 6.3 2.18 2.42 河口 低 ## 4 4 58 5.25 8.0 3.20 3.11 河口 低 ## 5 5 58 5.
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/analysing-elm-data-with-r/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/how-to-jekyll-a-blog/" itemprop="url">如何使用jekyll建设一个网站</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2016-08-27 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2016-08-27
     </time>
   </span>
 
@@ -534,6 +460,17 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
   </span>
   
 
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/%e7%bd%91%e7%ab%99">网站</a
+    >
+    
+  </span>
+  
   
 
   
@@ -555,11 +492,285 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
 
   <div class="article-style" itemprop="articleBody">
     
-    <p>Learn how to migrate an existing website from Jekyll to Hugo.</p>
+    一、可能感兴趣的人  没有多少专业知识，对电脑的了解仅限于正常办公、下载电影、知道几个dos命令。 有记录、整理、提升自己的需求。 认同接下来的时代是信息时代，不在网上的东西趋近于不存在。 感受到一些大型博客网站的不自由，不顺手。 想做自己的博客，又不想在搭建上费太多劲。  如果是这样，你和我有一样的需求，接下来这些记录估计会有用。
+本文还没写完，随时更新。
+二、几个概念 概念是厘清过程的基石，这些概念都是需要了解的，知道了这些，才知道自己每一步是在做什么。以下概念不一定很准，但相当通俗，因为我就是这么理解的，有错误的话欢迎提出来随时修改。
+1、github github是一个托管开源程序的网站，各种语言都可以。各种程序以repository的形式放在其服务器上，简称repo。下面说的ruby、jekyll和各种theme都可以放在上面。github通过git系统来进行版本控制。 github是个网站也是个远程硬盘，可以把代码图片等等放上去，大家合作做一些东西，方式就是git。
+想要熟悉github，首先要注册一个用户，然后fork几个repo，就在网页上多点点改改，看看有什么反应，泡的时间够了，对那些概念就会有一个初步的认识，起码就知道上面这句话是啥意思了。
+2、git git是一个版本控制系统。表现形式是一个命令行界面，在windows下需要下载一个新的命令行界面不能用系统自带的cmd，而是用安装后的gitbash。这个看着和cmd差不多都是黑乎乎的，但前面有个$符号，原因是不同的shell。shell是相对core的，是系统外层的壳，如果core是中央政府，shell就相当于职能部门，完成特定工作。部门是分锅吃饭的，shell也有不同种类，要用git的话，必须用gitbash，是bash的shell，linux一脉相承下来的。 其实用git最好再linux上用，苹果也行（好像苹果也是基于linux还是unix开发的？），在windows上需要设置的东西相对更多。
+git 六脉神剑(目前就用过这几个囧)
+   命令 使用及作用     git init 初始化一个repo，代表git对这个文件夹的变化开始全面掌控了，会有一个隐藏文件夹作为总控室。   git add . 这个文件夹里所有的变化，都报告给git总控室。   git commit -m &ldquo;some changes&rdquo; 总控室把所有的变化都批准了进行提交，建立一个时间节点，并对这些变化有个标注。   git checkout gh-pages 新建一个分支，这里用gh-pages做例子，因为要做博客，必须建一个这样的分支，这样gitpage这个网站才能从github的repo里生成网页。   git push 我们在电脑上的变化，比如我用记事本写了一个博客，要放到github上去，不需要像邮件一样上传，在gitbash或者别的命令行界面中推送就行了。   git pull 上一个动作的反向动作。如果我在网站上有变化，或者从其他电脑推送变化了，在另一台电脑上，可以把这些变化更新到本地，把变化拉过来。    3、ruby ruby其实是一种语言。语言也是需要安装的。在window里要下载，安装后会有一个新的命令界面，叫start command promot with ruby，这大概是把ruby和window自带的命令提示符结合了，没有$符号。装ruby的目的，是安装和应用jekyll。
     
   </div>
   <p class="read-more">
-    <a href="/post/migrate-from-jekyll/" class="btn btn-primary btn-outline">
+    <a href="/post/how-to-jekyll-a-blog/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/managing-international-financial-orgnization-loan-project/" itemprop="url">国际金融组织贷款项目管理流程</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2015-10-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2015-10-15
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/%e5%a4%96%e8%b5%84%e9%a1%b9%e7%9b%ae">外资项目</a
+    >, 
+    
+    <a href="/categories/%e9%a1%b9%e7%9b%ae%e7%ae%a1%e7%90%86">项目管理</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/%e5%a4%96%e8%b5%84%e9%a1%b9%e7%9b%ae">外资项目</a
+    >, 
+    
+    <a href="/tags/%e5%9b%bd%e9%99%85%e9%87%91%e8%9e%8d%e7%bb%84%e7%bb%87%e8%b4%b7%e6%ac%be">国际金融组织贷款</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    工作以来做的最多的就是外资造林项目。平时主要做具体业务，如编制可研、经济财务分析、环评社评等，对项目运作的宏观把握不够。别说高屋建瓴了，连较为全面清晰的把握都谈不上。缺啥补啥，试着对近期国家正在进行的国际金融组织贷款管理改革工作有关问题进行一个梳理，也算是对短板的锻炼。
+一、有关背景 （一）外资项目分类 外资项目分多种。
+平时大家接触较多的外企属于外商投资项目，适用中华人民共和国国家发展和改革委员会12号令，包括于中外合资、中外合作、外商独资、外商投资合伙、外商并购境内企业、外商投资企业增资及再投资项目等各类 外商投资项目。这些不是本文讨论的内容。
+还有一种是国外政府贷款项目，是指财政部经国务院批准代表国家向外国政府、北欧投资银行等统一筹借并形成政府外债的贷款，国务院批准的参照外国政府贷款管理的其他国外贷款，以及与上述贷款搭配使用的联合融资。
+国际金融组织贷款：是指财政部经国务院批准代表国家向世界银行、亚洲开发银行、国际农业发展基金、欧洲投资银行等国际金融组织统一筹借并形成政府外债的贷款，以及与上述贷款搭配使用的联合融资。
+本文总结的是最后一类，国际金融组织贷款项目管理的有关情况和个人思考。
+（二）国内项目管理体制 简单的说，国家信用贷款项目的管理体制是：
+发改系统管立项——项目能不能上；
+财政系统管资金——资金使用、还款能力、配套资金能力；
+部门做具体工作——具体到林业，就是要看看哪儿适合种树，造什么样的，立项后按要求把树种好，及时报账等。
+不管什么部门、企业，只要用到国家的钱、或者国家借的钱，就要走这一套程序。
+（三）国际金融组织的角色 国际金融组织的首要目标是保证资金收益，因此，他们会以自己的方式审核项目是否能满足资金收益。在一些公益性领域，如林业，减排等，会有政策性的低利率，不会过分强调资金收益率，但必须要保证不赔本。
+他们也会认真审核这个项目的材料。通过对项目准备材料的审查，来判断项目准备是否成熟，是否具有可操作性，最终决定是否放款。
+二、国际金融组织贷款项目管理环节 （一）发改委视角 发改委对项目的掌控主要从国民经济和社会发展规划、产业政策、外债管理及国外贷款使用原则等宏观方面入手，在项目实施之前主要有3个节点（以下摘自《国际金融组织和外国政府贷款投资项目管理暂行办法》）。
+一是要列入规划（省发改委决定是否报，国家发改委决定是否列入）。
+ 第五条 国外贷款备选项目规划是项目对外开展工作的依据。借用国外贷款的项目必须纳入国外贷款备选项目规划。
+ 二是要审批可行性研究报告（省发改委审批、或国家发改委审批）。
+ 第十二条 纳入国外贷款备选项目规划的项目，应当区别不同情况履行审批、核准或备案手续： （二）由省级政府负责偿还或提供还款担保的项目，按照省级政府直接投资项目进行管理，其项目审批权限，按国务院及国务院发展改革部门的有关规定执行。除应当报国务院及国务院发展改革部门审批的项目外，其他项目的可行性研究报告均由省级发展改革部门审批，审批权限不得下放。
+ 三是要审批资金申请报告（省发改委上报，国家发改委审批）。
+ 第十三条 项目纳入国外贷款备选项目规划并完成审批、核准或备案手续后，项目用款单位须向所在地省级发展改革部门提出项目资金申请报告。 项目资金申请报告由省级发展改革部门初审后，报国务院发展改革部门审批。 国务院行业主管部门、计划单列企业集团和中央管理企业的项目资金申请报告，直接报国务院发展改革部门审批。
+ 除了以上3个关键节点，还有一点需要注意，就是资金申请报告批了以后，不能耽误时间太长，要赶紧签订转贷协议。
+ 第二十一条 项目资金申请报告自批准之日起两年内，项目未签订国外贷款转贷协议的，该批准文件自动失效。
+ 项目开始实施后，发改委还规定了一些职能，意在监督、保障项目顺利实施。
+（二）财政部视角 财政部要保证项目资金使用的安全有效，制定了《国际金融组织和外国政府贷款赠款管理办法》，是政府外债的统一管理部门。贷款的筹借工作包括贷款申请、评审与评估、对外磋商与谈判、贷款法律文件签署与生效、转贷关系确定以及还款责任落实等（第十三条）。
+在项目实施之前，关键节点有如下几个：
+一是国际金融组织贷款规划（省财政厅申请，财政部决定是否列入）。
+ 第十四条 拟利用国际金融组织贷款的地方应当由省、自治区、直辖市、计划单列市财政部门以及新疆生产建设兵团财务局（以下简称省级财政部门）代表本级政府向财政部提交贷款申请书。
+。。。凡债务由地方承担的，还应当附送省级财政部门出具的还款承诺函。
+第十五条 财政部应当对贷款申请书进行审查，并根据本办法第四条、第五条的规定以及贷款方的要求等决定是否将贷款申请列入国际金融组织贷款规划。
+ 二是组织评审（省财政厅组织评估中心进行）。
+ 第十六条 省级财政部门对已列入国际金融组织贷款规划的有关项目应当组织评审，并向财政部提交评审意见书。财政部根据评审意见书决定是否安排对外磋商谈判。
+ 三是办理转贷（省财政厅申请，财政部批准）。
+ 第十九条 省级财政部门应当就评审后符合要求的、拟利用外国政府贷款的项目向财政部提出申请，并提交以下材料：。。。
+第二十条 财政部对省级财政部门提交的外国政府贷款申请材料予以审核确认后，应当根据贷款方的发展援助政策要求以及资金承诺情况，统一对外提出备选项目。
+第二十二条 财政部负责就符合条件的贷款项目与国际金融组织或者外国政府等进行贷款磋商谈判、组织签署贷款法律文件并办理生效事宜。其他部门应当协助财政部做好相关工作。
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/managing-international-financial-orgnization-loan-project/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/principal-response-curve-in-ecological-analysis/" itemprop="url">使用主响应曲线方法（principal response curve analysis）分析刺槐数据</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2015-01-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2015-01-22
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    2 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/%e7%bb%9f%e8%ae%a1-%e7%94%9f%e6%80%81">统计 生态</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    说起来，主响应曲线分析已经帮了自己2次了。一次是发表了一篇SCI论文，即Using microbial community functioning as the complementary environmental condition indicator，用来分析了BIOLOG数据，另一次就是在窄冠刺槐的课题中用了这种方法，增强了点科技感。搜了搜似乎网上还没有针对生态学分析中利用这种方法的中文的介绍，这里简单写一下，当作自己网站的第一篇原创文章。
+一、分析目标 针对多元数据，且在一个时间段内有连续的记录，分析在这个过程中有整体什么差异，且能展现这些差异是由哪些指标主要引起的。 这么说有点抽象，举个例子吧。比如有6个不同刺槐品种，从种下来开始，就测量胸径、树高、郁闭度、枝下高等指标，每年测量，一直测量了10年。不同品种肯定有差异，但这些差异在这10年里是怎么变化的呢？当然我可以单独拿出一个指标来，比如胸径，比较十年的变化，但这种比较不具有整体性。为了从整体上把不同品种的生长特征在这10年间的变化刻画出来，就可以使用PRC方法。它其实是一种基于降维的方法，在刻画出每个时间节点的主要特征后，在时间序列上表现出来。出处是Principal Response Curves: Analysis of Time-dependent Multivariate Responses of a Biological Community to Stress.van den Brink, P. J. &amp; ter Braak, C. J. F. (1999)。
+ 二、数据准备 数据准备，行为case，列为variable。即行是测定对象，列是指标。
+cihuai = read.table(&quot;PRC analysis data.txt&quot;, header = T, sep=&quot;\t&quot;, fileEncoding=&quot;UTF-16&quot;) head(cihuai) ## X dens hight DBH Crown UBhigh Closure ## 1 c1-1-1 833 1.55 1.29 0.52 0.39 0.05 ## 2 c1-1-2 833 1.
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/principal-response-curve-in-ecological-analysis/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/2015-10-15-managing-international-financial-orgnization-loan-project/" itemprop="url"></a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      0001-01-01
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    2 min read
+  </span>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    Managing international financial orgnization loan project       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs && document.readyState && document.readyState === "complete") { window.setTimeout(function() { hljs.initHighlighting(); }, 0); }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/2015-10-15-managing-international-financial-orgnization-loan-project/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/2016-08-27-how-to-jekyll-a-blog/" itemprop="url"></a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      0001-01-01
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    2 min read
+  </span>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    How to jekyll a blog       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs && document.readyState && document.readyState === "complete") { window.setTimeout(function() { hljs.initHighlighting(); }, 0); }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/2016-08-27-how-to-jekyll-a-blog/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>

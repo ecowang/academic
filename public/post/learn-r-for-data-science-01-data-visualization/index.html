@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.27.1" />
+  <meta name="author" content="王强">
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+    <link rel="stylesheet" href="/css/highlight.min.css">
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+
+
+  
+
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+
+  <link rel="alternate" href="" type="application/rss+xml" title="生态网">
+  <link rel="feed" href="" type="application/rss+xml" title="生态网">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="/post/learn-r-for-data-science-01-data-visualization/">
+
+  
+
+  <title>学习R for data science - 01 数据可视化 | 生态网</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">生态网</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+          </a>
+        </li>
+
+        
+        
+
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">学习R for data science - 01 数据可视化</h1>
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-09-25 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-09-25
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    6 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e5%ad%a6%e4%b9%a0R%20for%20data%20science%20-%2001%20%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96&amp;url=%2fpost%2flearn-r-for-data-science-01-data-visualization%2f"
+         target="_blank">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2flearn-r-for-data-science-01-data-visualization%2f"
+         target="_blank">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2flearn-r-for-data-science-01-data-visualization%2f&amp;title=%e5%ad%a6%e4%b9%a0R%20for%20data%20science%20-%2001%20%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96"
+         target="_blank">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2flearn-r-for-data-science-01-data-visualization%2f&amp;title=%e5%ad%a6%e4%b9%a0R%20for%20data%20science%20-%2001%20%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96"
+         target="_blank">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e5%ad%a6%e4%b9%a0R%20for%20data%20science%20-%2001%20%e6%95%b0%e6%8d%ae%e5%8f%af%e8%a7%86%e5%8c%96&amp;body=%2fpost%2flearn-r-for-data-science-01-data-visualization%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    <div class="article-style" itemprop="articleBody">
+      <div class="section level1">
+<h1>引言</h1>
+<p>学大神<a href="http://hadley.nz/">Hadley Wickham</a>的<a href="http://r4ds.had.co.nz/">R for data science</a>这本书，是本人现在的一个小目标。</p>
+<p>Hadley Wickham和<a href="http://yihui.name">谢亦辉</a>都在Rstudio公司工作，也在多所大学任教，属于R这个领域发展过程中走在最前面的人。他写了很多厉害的包，比如<code>ggplot2</code>，一个用来作图的包，这个包现在已经形成了一个体系，出现了很多基于这个包在某个专门领域作图的包上包。还有<code>dplyr</code>，用于数据整理，可以实现excel里数据透视表的功能，而且灵活的多。</p>
+<p><a href="http://r4ds.had.co.nz/">R for data science</a>里面涉及一系列包，这些包被打包成<a href="https://www.tidyverse.org/"><code>tidyverse</code></a>包，里面数据整理、分析、作图、文本操作、建模等等功能都有涉及。这里按照作者安排的从易到难，从有趣到抓狂的顺序，先学习数据可视化。希望我能坚持到一半以上。</p>
+<blockquote>
+<p>R for data science 是一本书，网址见上面。这本书是用bookdown的格式出的，即在github上有源码，然后编译成网站。</p>
+</blockquote>
+<blockquote>
+<p>tidyverse是一系列R包的组合包，R for data science 的操作基本都是和这些包有关的，可以说是介绍这些包如何使用。当然有重点和非重点，hadley自己写的包比较重点。</p>
+</blockquote>
+<blockquote>
+<p>R语言发展很快，现在是2017年，这本书也是2017年正式出版的。</p>
+</blockquote>
+<blockquote>
+<p>这一章主要学ggplot2这个包，用来作图，也就是数据可视化。</p>
+</blockquote>
+</div>
+<div class="section level1">
+<h1>书的结构</h1>
+<p>这本书包括数据整理、数据变形、数据分析、可视化、建模等等很多内容，如下图：</p>
+<div class="figure">
+<img src="http://r4ds.had.co.nz/diagrams/data-science-explore.png" />
+
+</div>
+<p>作者把这一部分放在前面，是因为这部分比较好学，而且可以接着就在分析中用上，效果比较直观——确实如此！只要你有要分析的数据。</p>
+</div>
+<div class="section level1">
+<h1>需要安装的包和分析涉及的数据</h1>
+<p>首先要安装<code>tidyverse</code>包，使用<code>install.package</code>函数，会自动把相关的包都装上。</p>
+<p>主要用到的数据有2个，一个是<code>mpg</code>，一个是<code>diamonds</code>，都是包里自带的。</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr</code></pre>
+<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
+<pre><code>## filter(): dplyr, stats
+## lag():    dplyr, stats</code></pre>
+<pre class="r"><code>mpg</code></pre>
+<pre><code>## # A tibble: 234 x 11
+##    manufacturer      model displ  year   cyl      trans   drv   cty   hwy
+##           &lt;chr&gt;      &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;      &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt;
+##  1         audi         a4   1.8  1999     4   auto(l5)     f    18    29
+##  2         audi         a4   1.8  1999     4 manual(m5)     f    21    29
+##  3         audi         a4   2.0  2008     4 manual(m6)     f    20    31
+##  4         audi         a4   2.0  2008     4   auto(av)     f    21    30
+##  5         audi         a4   2.8  1999     6   auto(l5)     f    16    26
+##  6         audi         a4   2.8  1999     6 manual(m5)     f    18    26
+##  7         audi         a4   3.1  2008     6   auto(av)     f    18    27
+##  8         audi a4 quattro   1.8  1999     4 manual(m5)     4    18    26
+##  9         audi a4 quattro   1.8  1999     4   auto(l5)     4    16    25
+## 10         audi a4 quattro   2.0  2008     4 manual(m6)     4    20    28
+## # ... with 224 more rows, and 2 more variables: fl &lt;chr&gt;, class &lt;chr&gt;</code></pre>
+<p>可以看到mpg这个数据是<code>tibble</code>格式的汽车相关数据，有234行（cases），11个变量（variables）。分别是</p>
+<ul>
+<li><p><strong>manufacturer</strong> 品牌 <code>chr 文本</code></p></li>
+<li><p><strong>model</strong> model name 型号 <code>int 整数型</code></p></li>
+<li><p><strong>displ</strong> engine displacement, in litres 排量 <code>dbl 数值型</code></p></li>
+<li><p><strong>year</strong> year of manufacture 产出年份 <code>int 整数型</code></p></li>
+<li><p><strong>cyl</strong> number of cylinders 几缸的 <code>int 整数型</code></p></li>
+<li><p><strong>trans</strong> type of transmission 手动自动啥档的 <code>int 整数型</code></p></li>
+<li><p><strong>drv</strong> f = front-wheel drive, r = rear wheel drive, 4 = 4wd 前驱后驱还是四驱 <code>int 整数型</code></p></li>
+<li><p><strong>cty</strong> city miles per gallon 城市每升油跑的公里数 <code>int 整数型</code></p></li>
+<li><p><strong>hwy</strong> highway miles per gallon 高速每升油跑的公里数 <code>int 整数型</code></p></li>
+<li><p><strong>fl</strong> fuel type 烧啥油 <code>chr 文本</code></p></li>
+<li><p><strong>class</strong> “type” of car 车型，紧凑的、中型的、豪华的、跑车、SUV、皮卡等等。。。 <code>chr 文本</code></p></li>
+</ul>
+<p>另一个数据是关于钻石的。</p>
+<pre class="r"><code>diamonds</code></pre>
+<pre><code>## # A tibble: 53,940 x 10
+##    carat       cut color clarity depth table price     x     y     z
+##    &lt;dbl&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;ord&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  0.23     Ideal     E     SI2  61.5    55   326  3.95  3.98  2.43
+##  2  0.21   Premium     E     SI1  59.8    61   326  3.89  3.84  2.31
+##  3  0.23      Good     E     VS1  56.9    65   327  4.05  4.07  2.31
+##  4  0.29   Premium     I     VS2  62.4    58   334  4.20  4.23  2.63
+##  5  0.31      Good     J     SI2  63.3    58   335  4.34  4.35  2.75
+##  6  0.24 Very Good     J    VVS2  62.8    57   336  3.94  3.96  2.48
+##  7  0.24 Very Good     I    VVS1  62.3    57   336  3.95  3.98  2.47
+##  8  0.26 Very Good     H     SI1  61.9    55   337  4.07  4.11  2.53
+##  9  0.22      Fair     E     VS2  65.1    61   337  3.87  3.78  2.49
+## 10  0.23 Very Good     H     VS1  59.4    61   338  4.00  4.05  2.39
+## # ... with 53,930 more rows</code></pre>
+<p>这个关于53940个钻石的数据，有10个变量:</p>
+<ul>
+<li><p>carat – weight of the diamond (0.2–5.01) 几克拉，数值</p></li>
+<li><p>price – price in US dollars ($326–$18,823) 多少钱，整数</p></li>
+<li><p>cut – quality of the cut (Fair, Good, Very Good, Premium, Ideal) 切割质量，有序因子</p></li>
+<li><p>color – diamond colour, from J (worst) to D (best) 颜色等级，有序因子</p></li>
+<li><p>clarity – a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best)) 透光度，有序因子</p></li>
+<li><p>x – length in mm (0–10.74)，数值变量</p></li>
+<li><p>y – width in mm (0–58.9)，数值变量</p></li>
+<li><p>z – depth in mm (0–31.8)，数值变量</p></li>
+<li><p>depth – total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)，深高百分比，数值变量，这个是算出来的</p></li>
+<li><p>table – width of top of diamond relative to widest point (43–95)桌面百分比，数值变量。</p></li>
+</ul>
+<blockquote>
+<p>PS，我相信钻石的魅力全是商家宣传出来的，这玩意儿既不保值，也不保险，fbb带的鸽子蛋也保不齐要。。。</p>
+</blockquote>
+<p>其实我们可以先自己想想如果自己手头拿到这样的数据会从什么角度分析。。。</p>
+</div>
+<div class="section level1">
+<h1>各种作图，各种分析</h1>
+<div id="ggplot" class="section level2">
+<h2>第一步，先做个图，了解ggplot函数</h2>
+<p>比如我们想知道不同排量的车，与其高速上每升油跑的公里数之间的关系，则：</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>可以预见的，肯定排量越大，一升油跑的距离越短。后面会分析离群值，不同品牌等内容，这里我们先仔细看看这句作图函数。</p>
+<p>ggplot2的核心理念是图层作图，因为每一层相对独立，所以更具有灵活性；图层之间叠加靠“+”实现，越后面图层越高。上面的语句其实就是：</p>
+<blockquote>
+<ul>
+<li>ggplot(data = mpg) 注意！我要画图了，画板已经摆好，数据就从mpg里找！然后，+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>geom_point(mapping = aes(x = displ, y = hwy)) 嚎，我来画点（geom_point已经说明了，几何，点）！加一层！aes代表美学（esthetics），aes用来明确xy选什么数据来画。</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>ggplot2有一系列的geom_XXX函数，可以加不同样式的图层。每一个这样的函数都需要mapping参数，这是用来确定变量怎么画图的，而mapping总是需要aes()，aes()需要x，y。。。</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>重要的事情再说一遍，geom_XXX需要mapping，mapping需要aes，aes需要x，y。ggplot(data = <DATA>) + <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))</li>
+</ul>
+</blockquote>
+<p>在<a href="https://www.amazon.com/dp/0387981403/ref=cm_sw_su_dp?tag=ggplot2-20">ggplot2: Elegant Graphics for Data Analysis</a>一书中，Hadley先介绍的qplot函数，这也是ggplot2里面的一个函数，q代表quick，上面的图用qplot也可以实现：</p>
+<pre class="r"><code>qplot(displ, hwy, data=mpg)</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>这个和r里面plot函数比较像，不过用习惯了还是ggplot方便，因为这种方法体现的思考方式比较流畅。</p>
+</div>
+<div class="section level2">
+<h2>进阶一点，复杂一点</h2>
+<p>观察上图，我们发现有几个高排量的车，油耗不太高，见下图红点所示。</p>
+<p><img src="http://r4ds.had.co.nz/visualize_files/figure-html/unnamed-chunk-6-1.png" /> 可以想一下，排量大，没升油跑的里程数还挺多，这。。。应该是跑车吧？显然这应该和车型有关，即class。如果能把不同车型用不同颜色、或符号表示就能看出来了：</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>一看，果然，右上角这几个是2seater跑车。</p>
+<p>前面说了，aes是美学的缩写，也就是说关于表现方式的调整都在这里实现，上面是在定义了aes里面xy的基础上，加上了对color的定义，其实也可以定义大小、形状、透明度等等。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, shape = class))</code></pre>
+<pre><code>## Warning: The shape palette can deal with a maximum of 6 discrete values
+## because more than 6 becomes difficult to discriminate; you have 7.
+## Consider specifying shapes manually if you must have them.</code></pre>
+<pre><code>## Warning: Removed 62 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>上图是用不同形状表示不同车型。要注意形状最多只能表示6种，所以SUV没有被表现出来。</p>
+<p>注意，变量对颜色的控制要放在aes里面，如果想要整体控制，就放倒外面。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), color = &quot;blue&quot;)</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>如果放到里面：</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = &quot;blue&quot;))</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>因为在aes里面，在mpg里去找blue这个变量，找不到，就把blue当成一个新的因子，赋予了粉红色。</p>
+</div>
+<div id="-facet" class="section level2">
+<h2>分面 facet</h2>
+<p>刚才我们研究了不同车型排量和单升公里数的关系，用不同颜色表示清晰了一些，但如果想看每一个车型有什么趋势还不明显。这就需要把每个车型拿出来单独作图，分面就是用来干这个活的。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>可以看到，前面一样，后面用➕，加上了这么一段facet_wrap(~ class, nrow = 2)</p>
+<p>～class的意思，就是按照class进行分面，nrow=2，排两行。</p>
+<p>有时候不知想按一个变量分面，比如我想看看不同缸数（cyl）、不一样驱动方式的车（drv），排量和单升公里数的关系，可以用另一个分面函数<code>facet_grid()</code>。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_grid(drv ~ cyl)</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div class="section level2">
+<h2>拟合曲线</h2>
+<p>发论文吧，不拟合个曲线，就跟不专业一样。如果你是审稿专家，一样的论文是希望看到上面的散点图，还是下面这样的？</p>
+<div class="figure">
+<img src="http://r4ds.had.co.nz/visualize_files/figure-html/unnamed-chunk-23-1.png" />
+
+</div>
+<p>这叫升华了。</p>
+<p>比较上面的散点图和下图：</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>注意了！明显的，geom_smooth对xy做了统计变换。下面引用原话：</p>
+<blockquote>
+<p>Each plot uses a different visual object to represent the data. In ggplot2 syntax, we say that they use different <strong>geoms</strong>.</p>
+</blockquote>
+<blockquote>
+<p>A <strong>geom</strong> is the geometrical object that a plot uses to represent data.</p>
+</blockquote>
+<p>不同的geom，就是不同的表现数据的对象。</p>
+<pre class="r"><code>geom_smooth</code></pre>
+<pre><code>## function (mapping = NULL, data = NULL, stat = &quot;smooth&quot;, position = &quot;identity&quot;, 
+##     ..., method = &quot;auto&quot;, formula = y ~ x, se = TRUE, na.rm = FALSE, 
+##     show.legend = NA, inherit.aes = TRUE) 
+## {
+##     params &lt;- list(na.rm = na.rm, ...)
+##     if (identical(stat, &quot;smooth&quot;)) {
+##         params$method &lt;- method
+##         params$formula &lt;- formula
+##         params$se &lt;- se
+##     }
+##     layer(data = data, mapping = mapping, stat = stat, geom = GeomSmooth, 
+##         position = position, show.legend = show.legend, inherit.aes = inherit.aes, 
+##         params = params)
+## }
+## &lt;environment: namespace:ggplot2&gt;</code></pre>
+<pre class="r"><code>geom_point</code></pre>
+<pre><code>## function (mapping = NULL, data = NULL, stat = &quot;identity&quot;, position = &quot;identity&quot;, 
+##     ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) 
+## {
+##     layer(data = data, mapping = mapping, stat = stat, geom = GeomPoint, 
+##         position = position, show.legend = show.legend, inherit.aes = inherit.aes, 
+##         params = list(na.rm = na.rm, ...))
+## }
+## &lt;environment: namespace:ggplot2&gt;</code></pre>
+<p>可以看到，每一个geom里面都有各stat，point的stat=“identity”，smooth的stat = “smooth”，identity就是数数，smooth就是平滑拟合。</p>
+<pre class="r"><code>stat_identity</code></pre>
+<pre><code>## function (mapping = NULL, data = NULL, geom = &quot;point&quot;, position = &quot;identity&quot;, 
+##     ..., show.legend = NA, inherit.aes = TRUE) 
+## {
+##     layer(data = data, mapping = mapping, stat = StatIdentity, 
+##         geom = geom, position = position, show.legend = show.legend, 
+##         inherit.aes = inherit.aes, params = list(na.rm = FALSE, 
+##             ...))
+## }
+## &lt;environment: namespace:ggplot2&gt;</code></pre>
+<pre class="r"><code>stat_smooth</code></pre>
+<pre><code>## function (mapping = NULL, data = NULL, geom = &quot;smooth&quot;, position = &quot;identity&quot;, 
+##     ..., method = &quot;auto&quot;, formula = y ~ x, se = TRUE, n = 80, 
+##     span = 0.75, fullrange = FALSE, level = 0.95, method.args = list(), 
+##     na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) 
+## {
+##     layer(data = data, mapping = mapping, stat = StatSmooth, 
+##         geom = geom, position = position, show.legend = show.legend, 
+##         inherit.aes = inherit.aes, params = list(method = method, 
+##             formula = formula, se = se, n = n, fullrange = fullrange, 
+##             level = level, na.rm = na.rm, method.args = method.args, 
+##             span = span, ...))
+## }
+## &lt;environment: namespace:ggplot2&gt;</code></pre>
+<p>神奇的事情发生了，两个stat里面有geom参数，一个是point，一个是smooth。</p>
+<p>明白了这一点，两条路选一条就可以了，用geom。同样是在aes里面，可以对线型进行控制，比如对不同驱动方式的车分类拟合。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>还能更清楚一点。</p>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x=displ, y=hwy, color=drv)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv, color = drv))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-learn-r-for-data-science-01-data-visualization_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+</div>
+<div class="section level1">
+<h1>小结</h1>
+<ol style="list-style-type: decimal">
+<li>ggplot()作出底板，geom_XXX层层叠加。</li>
+<li>geom里又stat，stat其实是geom的一体两面。</li>
+</ol>
+</div>
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+<div class="container">
+  <nav>
+  <ul class="pager">
+    
+    <li class="previous"><a href="/post/analysing-elm-data-with-r/"><span
+      aria-hidden="true">&larr;</span> 使用R语言分析白榆生长数据</a></li>
+    
+
+    
+    <li class="next"><a href="/post/r-for-data-science-02-data-visualization/">学习R for data science - 02 数据可视化 <span
+      aria-hidden="true">&rarr;</span></a></li>
+    
+  </ul>
+</nav>
+
+</div>
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 王强 &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+

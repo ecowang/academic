@@ -1,0 +1,133 @@
+---
+title: 学习R for data science - 02 数据可视化
+author: 王强
+date: '2017-09-26'
+slug: r-for-data-science-02-data-visualization
+categories:
+  - R
+tags:
+  - R
+  - Data visualization
+---
+
+
+
+<div class="section level1">
+<h1>书接<a href="http://www.ecology.wang/2017/09/25/learn-r-for-data-science-01-data-visualization/">上回</a>，从拟合曲线到花样叠加</h1>
+<p>ggplot作图可以多图层叠加，拟合的曲线也是叠加的一层图，也就是从画板（ggplot）开始 <strong>+</strong>画点（geom_point()）再<strong>＋</strong>画曲线（geom_smooth()）。也就是说</p>
+<blockquote>
+<p>想要多的图层，就用加号增加geom_XXX函数就行了</p>
+</blockquote>
+<p>明白了这种操作，能做的事情就多了。而且不仅如此，还有很多其他灵活性和功能——让我们再从假设需求开始：</p>
+<p>上面我们用下面的代码做出了这个图，看排量displ和每加仑高速公里数hwy的关系：</p>
+<pre class="r"><code>library(ggplot2)
+library(tidyverse)</code></pre>
+<pre><code>## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr</code></pre>
+<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
+<pre><code>## filter(): dplyr, stats
+## lag():    dplyr, stats</code></pre>
+<pre class="r"><code>ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>然后假设我们又想看看几缸的和高速公里数的关系，按说应该老老实实地把上面代码中的displ换成cyl，不过作者说了，这样的话，你需要换两个地方，可能会遗漏。。。把mapping放到ggplot函数里，让它作为一个“全局变量”多好，换一个地方就行了嘛！</p>
+<p>牛逼！</p>
+<p>所以上面的图也可以用下面的代码画出来：</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth()</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>确实，更简洁，改动也更方便了。</p>
+<p>这里要注意的是，虽然有了全局变量，但每一个geom函数里面还可以定义mapping，而且geom里的优先级要高。如果ggplot里有mapping而geom里没有，则geom借用全局变量；如果geom里有的话，则优先用自己的。比如我想对全局数据进行拟合，但想让不同车型用不同颜色表示，则可以这样：</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class)) + 
+  geom_smooth()</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>或者也可以仅仅对紧凑型车型进行拟合。</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class)) + 
+  geom_smooth(data = filter(mpg, class == &quot;subcompact&quot;), se = FALSE)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>可以发现，ggplot虽然可以定义全局变量，包括data，mapping等，但每一个geom都是有独立自主权的，虽然在你的画板上添加图层，但添加什么都是自己说了算。比如还可以换x，y，针对几缸画点（分类别），然后只拟合紧凑型的车排量和每加仑公里数的关系，就会出来这么个怪模怪样的图。</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(x= cyl, y = hwy, color = class)) +
+  geom_smooth(data = filter(mpg, class == &quot;subcompact&quot;), se = FALSE)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<blockquote>
+<p>不同的拟合是不同的建模，关于建模后面会有专门章节进行介绍。</p>
+</blockquote>
+</div>
+<div class="section level1">
+<h1>使用钻石数据，继续理解统计变换</h1>
+<p>钻石数据用来展示统计变换如何进行的。其实上面的拟合也是一种变换，参数里已经有stat的应用。书中到了这里重点讲统计变换，使用条形图（<strong>bar chart</strong>）进行说明。</p>
+<pre class="r"><code>ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut))</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-6-1.png" width="672" /> x=cut，就是x轴按照cut进行分组，分组后干啥呢？即按照函数中的默认stat进行统计。看看。</p>
+<pre class="r"><code>?geom_bar</code></pre>
+<blockquote>
+<p>geom_bar(mapping = NULL, data = NULL, stat = “count”, position = “stack”, …, width = NULL, binwidth = NULL, na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)</p>
+</blockquote>
+<p>可以发现这里的统计方式就是计数“count”. 通过计数，得到新的变量，再用来作图。过程示意如下：</p>
+<div class="figure">
+<img src="http://r4ds.had.co.nz/images/visualization-stat-bar.png" />
+
+</div>
+<p>上面做的条形图，展示的是不同分组的数量。不过在实际操作中，很多时候直接用来展示相应的y值，比如下面这样的数。</p>
+<pre class="r"><code>demo &lt;- tribble(
+  ~cut,         ~freq,
+  &quot;Fair&quot;,       1610,
+  &quot;Good&quot;,       4906,
+  &quot;Very Good&quot;,  12082,
+  &quot;Premium&quot;,    13791,
+  &quot;Ideal&quot;,      21551
+)
+# tribble是用来建立tibble数据框的函数，Hadley首创，比传统的dataframe更加灵活，后面会有详细介绍。简单的说，就是这种增强型的数据框，可以成为框中有框的样子，当然这里没有体现出来。
+
+ggplot(data = demo) +
+  geom_bar(mapping = aes(x = cut, y = freq), stat = &quot;identity&quot;)</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>试试改成dataframe会有什么情况发生？</p>
+<pre class="r"><code>df.demo = as.data.frame(demo)
+str(df.demo)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    5 obs. of  2 variables:
+##  $ cut : chr  &quot;Fair&quot; &quot;Good&quot; &quot;Very Good&quot; &quot;Premium&quot; ...
+##  $ freq: num  1610 4906 12082 13791 21551</code></pre>
+<pre class="r"><code>ggplot(data = df.demo) +
+  geom_bar(mapping = aes(x = cut, y = freq), stat = &quot;identity&quot;)</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>嗯，至少在这种模式下，dataframe和tibble都好用。</p>
+<p>作者这里要说明的是，可以把stat改成identity，就是啥也不变，达到前面说的直接展示原始数据的目的，这样就不是展示计数，而是展示原始y数据了。可以试试如果不变是啥样，肯定都是一。</p>
+<pre class="r"><code>ggplot(data = demo) +
+  geom_bar(mapping = aes(x = cut))</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>这里把y=freq删了，因为如果带着，stat=count就没法发挥功能了。</p>
+<p>stat=count，除了计数，还能计算频率，这是它能算出来的两个变量。每一个统计变换都能计算出新的变量，可以在帮主函数的“computed varaibles”中找到。count的另一个变量是prop，也就是groupwise proportion，可以用下面这种方式改变其所给的变量。</p>
+<pre class="r"><code>ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop.., group = 1))</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>存疑1 这个group=1是啥意思？</p>
+<p>ggplot2里面提供了超过20种的统计变换，其中一种比较综合的应用是使用stat_summary(),可以对所做的统计汇总进行作图，如下图，对最大、最小和中位值作图。</p>
+<pre class="r"><code>ggplot(data = diamonds) + 
+  stat_summary(
+    mapping = aes(x = cut, y = depth),
+    fun.ymin = min, 
+    fun.ymax = max,
+    fun.y = median
+  )</code></pre>
+<p><img src="/post/2017-09-25-r-for-data-science-02-data-visualization_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>存疑2，这个默认geom = “pointrange”，不过改了几个，对下面的图没有作用？</p>
+</div>
+<div class="section level1">
+<h1>原书中还有关于位置和坐标系调整的内容</h1>
+<p>不过我觉得不太重要，可以用的时候再去查阅。</p>
+<p>数据可视化一节到此为止。</p>
+</div>
