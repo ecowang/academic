@@ -1,0 +1,15 @@
+---
+title: r for data science 04 data transformation
+author: 王强
+date: '2017-10-09'
+slug: r-for-data-science-04-data-transformation
+categories:
+  - R
+tags:
+  - Data  transformation
+  - R
+draft: yes
+---
+
+[本章](http://r4ds.had.co.nz/transform.html)讲数据变形。
+

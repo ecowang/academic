@@ -132,6 +132,32 @@
   
   
   <div>
+    <h2><a href="/post/analyzing-text-data-on-web/">使用R语言分析网络文本数据——以小学生分析过的苏轼为例</a></h2>
+    <div class="article-style">
+      
+      <p>那天看了新华社微信号发的一篇文章，讲清华附小的小学生研究苏轼，其中一篇用大数据方法研究了苏轼三千多首诗词，然后得出了一系列结论。
+很受触动，因为其中研究方法的第一句是：“我和爸爸用一段程序分析了。。。”
+ 试试自己如果遇到这种情况，能不能“用一段程序”获取孩子分析需要的内容。
+读取网页数据 从单个网页上读取一首词 感谢前人的工作，不需要到处去找苏轼的诗词了，都汇总在诗词名句网，我们需要做的就是用程序把相关的文本都读取出来，然后进行分析。
+难在网页数据，特别是文字数据，比较复杂，自己对页面结构又没了解。。。不过，先干点再说。
+首先加载自己见过的XML包，应该是对付web数据的，试上几个函数。</p>
+
+<h2 id="loading-tidyverse-ggplot2-loading-tidyverse-tibble-loading-tidyverse-tidyr-loading-tidyverse-readr-loading-tidyverse-purrr-loading-tidyverse-dplyr-conflicts-with-tidy-packages-filter-dplyr-stats-lag-dplyr-stats-这个函数是读取页面里list数据-但很可惜似乎没有读到诗句正文的一层-打开chrome-看网页souces-诗词内容不是-lt-li-gt-而是">Loading tidyverse: ggplot2 ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- ## filter(): dplyr, stats ## lag(): dplyr, stats 这个函数是读取页面里list数据，但很可惜似乎没有读到诗句正文的一层。打开chrome，看网页Souces,诗词内容不是&lt;li&gt;，而是</h2>
+
+<p>&lt;h2&gt;《念奴娇 赤壁怀古》&lt;/h2&gt; &lt;div class=&quot;jjzz&quot;&gt;年代:&lt;a href=&quot;/category/songdaishiren&quot; target=&quot;_blank&quot;&gt; 宋&lt;/a&gt; 作者: &lt;a href=&quot;/chaxun/zuozhe/9.html&quot; title=&quot;苏轼的诗全集&quot; target=&quot;_blank&quot;&gt;苏轼&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;shicineirong&quot; id=&quot;shicineirong&quot;&gt;大江东去，浪淘尽，千古风流人物。&lt;br /&gt;故垒西边，人道是，三国周郎赤壁。&lt;br /&gt;乱石穿空，惊涛拍岸，卷起千堆雪。&lt;br /&gt;江山如画，一时多少豪杰。&lt;br /&gt;遥想公瑾当年，小乔初嫁了，雄姿英发。&lt;br /&gt;羽扇纶巾，谈笑间，樯橹灰飞烟灭。(樯橹 一作：强掳)&lt;br /&gt;故国神游，多情应笑我，早生华发。&lt;br /&gt;人生如梦，一尊还酹江月。(人生 一作：人间；尊 通：樽)</p>
+
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/r-for-data-science-04-data-transformation/">r for data science 04 data transformation</a></h2>
+    <div class="article-style">
+      
+    </div>
+  </div>
+  
+  <div>
     <h2><a href="/post/r-for-data-science-03-some-basics/">学习R for data science - 03 一些基础操作</a></h2>
     <div class="article-style">
       

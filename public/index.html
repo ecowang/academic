@@ -304,6 +304,197 @@
       
           
       
+          
+      
+
+      
+      
+        
+        
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/analyzing-text-data-on-web/" itemprop="url">使用R语言分析网络文本数据——以小学生分析过的苏轼为例</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-10-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-10-15
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    31 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/data-visualization">Data visualization</a
+    >, 
+    
+    <a href="/tags/r">R</a
+    >, 
+    
+    <a href="/tags/%e6%96%87%e6%9c%ac%e5%88%86%e6%9e%90">文本分析</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    那天看了新华社微信号发的一篇文章，讲清华附小的小学生研究苏轼，其中一篇用大数据方法研究了苏轼三千多首诗词，然后得出了一系列结论。
+很受触动，因为其中研究方法的第一句是：“我和爸爸用一段程序分析了。。。”
+ 试试自己如果遇到这种情况，能不能“用一段程序”获取孩子分析需要的内容。
+读取网页数据 从单个网页上读取一首词 感谢前人的工作，不需要到处去找苏轼的诗词了，都汇总在诗词名句网，我们需要做的就是用程序把相关的文本都读取出来，然后进行分析。
+难在网页数据，特别是文字数据，比较复杂，自己对页面结构又没了解。。。不过，先干点再说。
+首先加载自己见过的XML包，应该是对付web数据的，试上几个函数。
+## Loading tidyverse: ggplot2 ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats 这个函数是读取页面里list数据，但很可惜似乎没有读到诗句正文的一层。打开chrome，看网页Souces,诗词内容不是&lt;li&gt;，而是
+ &lt;h2&gt;《念奴娇 赤壁怀古》&lt;/h2&gt; &lt;div class=&quot;jjzz&quot;&gt;年代:&lt;a href=&quot;/category/songdaishiren&quot; target=&quot;_blank&quot;&gt; 宋&lt;/a&gt; 作者: &lt;a href=&quot;/chaxun/zuozhe/9.html&quot; title=&quot;苏轼的诗全集&quot; target=&quot;_blank&quot;&gt;苏轼&lt;/a&gt;&lt;/div&gt; &lt;div class=&quot;shicineirong&quot; id=&quot;shicineirong&quot;&gt;大江东去，浪淘尽，千古风流人物。&lt;br /&gt;故垒西边，人道是，三国周郎赤壁。&lt;br /&gt;乱石穿空，惊涛拍岸，卷起千堆雪。&lt;br /&gt;江山如画，一时多少豪杰。&lt;br /&gt;遥想公瑾当年，小乔初嫁了，雄姿英发。&lt;br /&gt;羽扇纶巾，谈笑间，樯橹灰飞烟灭。(樯橹 一作：强掳)&lt;br /&gt;故国神游，多情应笑我，早生华发。&lt;br /&gt;人生如梦，一尊还酹江月。(人生 一作：人间；尊 通：樽)
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/analyzing-text-data-on-web/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+
+      
+
+        
+
+        
+        
+
+        
+        
+          
+      
+          
+      
+
+      
+      
+        
+        
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/r-for-data-science-04-data-transformation/" itemprop="url">r for data science 04 data transformation</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-10-09 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-10-09
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/data--transformation">Data  transformation</a
+    >, 
+    
+    <a href="/tags/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    <p><a href="http://r4ds.had.co.nz/transform.html">本章</a>讲数据变形。</p>
+
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/r-for-data-science-04-data-transformation/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+
+      
+
+        
+
+        
+        
+
+        
+        
+          
+      
+          
+      
 
       
       
@@ -577,174 +768,6 @@ library(tidyverse) ## Loading tidyverse: ggplot2 ## Loading tidyverse: tibble ##
   </div>
   <p class="read-more">
     <a href="/post/learn-r-for-data-science-01-data-visualization/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-
-      
-
-        
-
-        
-        
-
-        
-        
-
-      
-      
-        
-        
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/analysing-elm-data-with-r/" itemprop="url">使用R语言分析白榆生长数据</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2017-09-23 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2017-09-23
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    9 min read
-  </span>
-  
-
-  
-  
-  
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/%e7%bb%9f%e8%ae%a1-%e4%ba%ba%e5%b7%a5%e6%9e%97">统计 人工林</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    1. 数据初步整理 使用白榆生长数据。指标分别有：品系号、生长地点、环境盐碱度（低中高三种）、树高、胸径、东西冠幅、南北冠幅，为2017年测定。
-在excel里整理数据，导出为csv格式，存在R工作目录下，进行操作。如果在windows下，使用read.csv 即可，但苹果中需要另外一种形式。
- 后来发现是自己忘了加引号了。。。
- all.data = read.table(&quot;all.data.demo.txt&quot;, header = T, sep=&quot;\t&quot;, fileEncoding=&quot;UTF-16&quot;) head(all.data) ## X spe high dbh ew sn loca salt ## 1 1 58 5.04 6.2 2.12 2.90 河口 低 ## 2 2 58 4.85 6.0 1.86 2.05 河口 低 ## 3 3 58 4.83 6.3 2.18 2.42 河口 低 ## 4 4 58 5.25 8.0 3.20 3.11 河口 低 ## 5 5 58 5.
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/analysing-elm-data-with-r/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-
-      
-
-        
-
-        
-        
-
-        
-        
-          
-      
-
-      
-      
-        
-        
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/how-to-jekyll-a-blog/" itemprop="url">如何使用jekyll建设一个网站</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2016-08-27 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2016-08-27
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    2 min read
-  </span>
-  
-
-  
-  
-  
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/%e7%bd%91%e7%ab%99">网站</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/tags/jekyll">jekyll</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    一、可能感兴趣的人  没有多少专业知识，对电脑的了解仅限于正常办公、下载电影、知道几个dos命令。 有记录、整理、提升自己的需求。 认同接下来的时代是信息时代，不在网上的东西趋近于不存在。 感受到一些大型博客网站的不自由，不顺手。 想做自己的博客，又不想在搭建上费太多劲。  如果是这样，你和我有一样的需求，接下来这些记录估计会有用。
-本文还没写完，随时更新。
-二、几个概念 概念是厘清过程的基石，这些概念都是需要了解的，知道了这些，才知道自己每一步是在做什么。以下概念不一定很准，但相当通俗，因为我就是这么理解的，有错误的话欢迎提出来随时修改。
-1、github github是一个托管开源程序的网站，各种语言都可以。各种程序以repository的形式放在其服务器上，简称repo。下面说的ruby、jekyll和各种theme都可以放在上面。github通过git系统来进行版本控制。 github是个网站也是个远程硬盘，可以把代码图片等等放上去，大家合作做一些东西，方式就是git。
-想要熟悉github，首先要注册一个用户，然后fork几个repo，就在网页上多点点改改，看看有什么反应，泡的时间够了，对那些概念就会有一个初步的认识，起码就知道上面这句话是啥意思了。
-2、git git是一个版本控制系统。表现形式是一个命令行界面，在windows下需要下载一个新的命令行界面不能用系统自带的cmd，而是用安装后的gitbash。这个看着和cmd差不多都是黑乎乎的，但前面有个$符号，原因是不同的shell。shell是相对core的，是系统外层的壳，如果core是中央政府，shell就相当于职能部门，完成特定工作。部门是分锅吃饭的，shell也有不同种类，要用git的话，必须用gitbash，是bash的shell，linux一脉相承下来的。 其实用git最好再linux上用，苹果也行（好像苹果也是基于linux还是unix开发的？），在windows上需要设置的东西相对更多。
-git 六脉神剑(目前就用过这几个囧)
-   命令 使用及作用     git init 初始化一个repo，代表git对这个文件夹的变化开始全面掌控了，会有一个隐藏文件夹作为总控室。   git add . 这个文件夹里所有的变化，都报告给git总控室。   git commit -m &ldquo;some changes&rdquo; 总控室把所有的变化都批准了进行提交，建立一个时间节点，并对这些变化有个标注。   git checkout gh-pages 新建一个分支，这里用gh-pages做例子，因为要做博客，必须建一个这样的分支，这样gitpage这个网站才能从github的repo里生成网页。   git push 我们在电脑上的变化，比如我用记事本写了一个博客，要放到github上去，不需要像邮件一样上传，在gitbash或者别的命令行界面中推送就行了。   git pull 上一个动作的反向动作。如果我在网站上有变化，或者从其他电脑推送变化了，在另一台电脑上，可以把这些变化更新到本地，把变化拉过来。    3、ruby ruby其实是一种语言。语言也是需要安装的。在window里要下载，安装后会有一个新的命令界面，叫start command promot with ruby，这大概是把ruby和window自带的命令提示符结合了，没有$符号。装ruby的目的，是安装和应用jekyll。
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/how-to-jekyll-a-blog/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>

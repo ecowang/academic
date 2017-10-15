@@ -1,0 +1,532 @@
+---
+title: 使用R语言分析网络文本数据——以小学生分析过的苏轼为例
+author: 王强
+date: '2017-10-15'
+slug: analyzing-text-data-on-web
+categories:
+  - R
+tags:
+  - Data visualization
+  - R
+  - 文本分析
+---
+
+
+那天看了新华社微信号发的一篇文章，讲清华附小的小学生研究苏轼，其中一篇用大数据方法研究了苏轼三千多首诗词，然后得出了一系列结论。
+
+很受触动，因为其中研究方法的第一句是：“我和爸爸用一段程序分析了。。。”
+
+![](http://p2.ifengimg.com/fck/2017_41/eb8644c831f1b7d_w1280_h1860.jpg)
+
+试试自己如果遇到这种情况，能不能“用一段程序”获取孩子分析需要的内容。
+
+
+## 读取网页数据
+
+### 从单个网页上读取一首词
+
+感谢前人的工作，不需要到处去找苏轼的诗词了，都汇总在[诗词名句网](http://www.shicimingju.com/)，我们需要做的就是用程序把相关的文本都读取出来，然后进行分析。
+
+难在网页数据，特别是文字数据，比较复杂，自己对页面结构又没了解。。。不过，**先干点再说。**
+
+首先加载自己见过的`XML`包，应该是对付web数据的，试上几个函数。
+
+```{r, echo=FALSE}
+library(tidyverse) # 为了以后用管道函数 %>%
+
+library(XML)
+
+# readHTMLList("http://www.shicimingju.com/chaxun/list/3710.html")
+# 念奴娇 赤壁怀古一页，太长不显示了。
+```
+
+这个函数是读取页面里list数据，但很可惜似乎没有读到诗句正文的一层。打开chrome，看网页Souces,诗词内容不是`<li>`，而是
+
+>    `<h2>《念奴娇 赤壁怀古》</h2>`
+       `<div class="jjzz">年代:<a href="/category/songdaishiren" target="_blank"> 宋</a> 作者: <a href="/chaxun/zuozhe/9.html" title="苏轼的诗全集" target="_blank">苏轼</a></div>`
+        `<div class="shicineirong" id="shicineirong">大江东去，浪淘尽，千古风流人物。<br />故垒西边，人道是，三国周郎赤壁。<br />乱石穿空，惊涛拍岸，卷起千堆雪。<br />江山如画，一时多少豪杰。<br />遥想公瑾当年，小乔初嫁了，雄姿英发。<br />羽扇纶巾，谈笑间，樯橹灰飞烟灭。(樯橹 一作：强掳)<br />故国神游，多情应笑我，早生华发。<br />人生如梦，一尊还酹江月。(人生 一作：人间；尊 通：樽) `
+        
+应该是本函数不读取`<div>`的内容。试着找个能读的。换`xml2`包里的read_html.
+
+```{r}
+library(xml2)
+# dingfengbo = read_html("http://www.shicimingju.com/chaxun/list/35087.html")
+```
+
+也不行，继续搜。
+
+发现可以用`rvest`包，又是Hadley写的。。。
+
+```{r, echo=FALSE}
+library(rvest)
+
+dingfengbo = read_html("http://www.shicimingju.com/chaxun/list/35087.html")
+
+# read_html()读取可以，html_session()也可以？
+
+dingfengbo
+
+# dingfengbo %>% html_nodes("div")%>%   html_text()
+
+# 选出来的文字内容太多了，这里不显示了。
+# 节点，node的确定，chrome下可以用SelectorGadget这个插件。<div>里面头上的class="shicineirong" id="shicineirong"不能用作确定节点的参数。
+```
+
+下一步是如何确定有词的node。
+
+参考[这里](http://www.10tiao.com/html/408/201610/2247483834/1.html),发现可以用`<div>`里面的参数对提取的文本进行定位。
+
+```{r}
+
+html_nodes(dingfengbo,".shicineirong")%>% html_text 
+
+# 这个关键的.shicineirong，就是可以用那个插件发现的，不用那么费劲去翻网页源码。
+```
+
+行了，开始没有写那个`.`，让我饶了一大圈。另外，这里面没有标题，标题是在h2里标记的，读取方式和上面不一样。重新看看函数。
+
+`html_nodes`的参数：
+
+> css: Nodes to select. Supply one of css or xpath depending on whether you want to use 
+
+> xpath: a css or xpath 1.0 selector.
+
+跟页面的编写语言有关。参考的页面是这么说的：
+
+> 如果想要准确的提取相关新闻消息，需要用css选择器准确地描述消息所处的位置，如.news-list-b a、.txt-a-hilight等。如果你熟悉css选择器，你将会很容易通过查看html的源代码来定位所要提取内容的位置。如果你不太熟悉，这个我们的大神也考虑到了，你可以直接使用一个基于JS的小工具来实现定位，插件的使用参见vignette("selectorgadget")。
+
+原来就是上面说的这个[东西](http://selectorgadget.com/)， 其实昨天已经发现并装在了chrome上了，但没能选出来，为什么？因为那个网站下面有一行广告，妈的把提取出来的值遮住了，我以为上面的div就是提取的东西。然后是在网页源码里找的，对照着.news-list-b在那个网页源码里位置，找正文相对应位置前面的这个值(见下一节“绕的一大圈”)。
+
+```{r}
+# 用selectorgadget选出来的节点试试
+html_nodes(dingfengbo,"#shicineirong , h2")%>% html_text 
+```
+
+有题目了，不过页面旁边有一个随机诗，题目标的也是h2，所以也给提出取出来了，先这样，然后再删吧。
+```{r}
+dingfengbo.timu = html_nodes(dingfengbo,"#shicineirong , h2")%>% html_text 
+dingfengbo.timu[c(2,3)]
+```
+
+还有一种简单的写法：
+
+```{r}
+
+html_nodes(dingfengbo,"#shicineirong , h2")%>% html_text %>% .[c(2,3)] 
+
+# 这个表述“%>% .[c(2,3)]” 以后可能很有用，如果是数据框的话，接着跟一个%>%html_talbe()，就可以得到比较整齐的数据了。见https://www.youtube.com/watch?v=jyqnbUNEO00
+
+# 另，函数gsub，可以去掉不需要的字符串，剩下数字。gsub("min", "", data$time). https://www.youtube.com/watch?v=jyqnbUNEO00, 这个字符数据操作：http://blog.csdn.net/u011402596/article/details/43938093
+```
+### 绕的一大圈（费劲，还有好多标记没去掉，要善于发现和使用轮子啊）
+
+```{r}
+dingfengbo.ci = html_nodes(dingfengbo,"div")%>% html_text 
+```
+
+仔细找找，dingfengbo.ci是一个63个的字符串，词在第47个。
+
+```{r}
+dingfengbo.ci[47]
+```
+
+
+换一首词，试试看看是不是每一个词都是第47个。
+
+```{r}
+
+shuidiao = read_html("http://www.shicimingju.com/chaxun/list/279218.html")
+
+shuidiao.ci = html_nodes(shuidiao,"div")%>% html_text 
+
+shuidiao.ci[47]
+```
+
+看来结构都是一样的。但这是针对一个单一页面。下一步，如何把苏轼列表下的诗都读取出来，并恰当的存放。
+
+[这里都说尽了](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/)
+
+### 如何在目录页里找到所列词的页面地址
+
+回到苏轼的目录页，先试试之前的读取列表函数。
+
+```{r}
+readHTMLList("http://www.shicimingju.com/chaxun/zuozhe/9.html")
+```
+
+这个函数自动过滤后台的标记得到里面的列表，想找到每首词的网址还得想点别的办法。
+找到一个[介绍有关内容的网站](http://blog.csdn.net/wshsa/article/details/74157341)
+
+```{r}
+page1 = read_html("http://www.shicimingju.com/chaxun/zuozhe/9.html")
+page1 %>% html_node(".shicilist") %>%  html_children()
+```
+
+慢慢试试，找到了`html_children`函数,看到了这些链接了,然后要把他们提取出来，组成完整链接，然后用单个网页的方法提取诗词内容。
+
+```{r}
+page1.list = page1 %>% html_node("div.shicilist ul ") %>%  html_children()
+page1.list[1]
+```
+
+
+
+这个数据存储格式有点复杂。。。常规的用来处理文本的函数都干不了。。。比如grep(pattern = "boy", x = c("abcb", "boy", "baby"))。。。可这里的文本都还堆在一块。
+
+[找到个说的比较清楚的](http://blog.csdn.net/wshsa/article/details/74157341)。
+
+```{r}
+page1 %>% html_node("div.shicilist ul li") %>% html_children() %>% html_attrs()
+# 试了又试。。。这样能把第一个的网址弄出来。可为什么后面的不行呢？ 
+
+```
+
+仔细看看源码，又用selectorgadget插件点来点去，发现每一个标题的node都是在child下面往下数的，比如第二页：
+
+```{r}
+page1 %>% html_node("div.shicilist ul:nth-child(2) li") %>%  html_children() %>% html_attrs()
+
+# 妈呀终于发现一种实现方法了。。。是这个网页有点复杂吗。。。我感觉html_children()和其他函数搭配应该能直接提取出来。。。
+```
+然后要把那个网址提取出来。
+```{r}
+temp = page1 %>% html_node("div.shicilist ul:nth-child(2) li") %>%  html_children() %>% html_attrs()
+temp[[1]][1]
+# 这样就调出来了。
+```
+
+
+要把这一页上的40首作品的地址都取出来，实在找不到现成的函数，只好用for循环了。
+
+```{r}
+page1.url = c(1:40)    # 用来存储第一页的url
+
+
+for (i in 1:40)
+{
+  node = paste0("div.shicilist ul:nth-child(", i, ") li")
+  temp = page1 %>% html_node(node) %>%  html_children() %>% html_attrs()
+  page1.url[i] = temp[[1]][1]
+}
+
+# 认真考虑了一会为什么这个i在html_node()里面不能用呢？因为那里面是字符啊大哥！
+```
+
+
+
+别高兴太早，一页40首诗，一共3459首，共有86页40首的，最后87页有19首。还得设置循环。据说有种叫API的东西，可以不用这么麻烦。。。不过估计网站不一定都有这个接口，有的话目前也不懂，以后再了解。
+
+
+```{r}
+url.temp = c(1:40)
+
+for (i in 2:86)
+ {
+   url = paste0("http://www.shicimingju.com/chaxun/zuozhe/9_", i, ".html#chaxun_miao")
+  
+   for (j in 1:40)
+   {
+   node = paste0("div.shicilist ul:nth-child(", j, ") li")
+   page.temp = read_html(url)
+   temp = page.temp %>% html_node(node) %>%  html_children() %>% html_attrs()
+   url.temp[j] = temp[[1]][1]
+   }
+
+   page1.url = c(page1.url, url.temp)  # 用page1滚雪球
+  
+  
+ }
+
+```
+
+别忘了还有最后一页，不是40首，是19首：
+
+```{r}
+url.temp = c(1:19)
+
+ for (j in 1:19)
+  {
+  node = paste0("div.shicilist ul:nth-child(", j, ") li")
+  page.temp = read_html("http://www.shicimingju.com/chaxun/zuozhe/9_87.html#chaxun_miao")
+  temp = page.temp %>% html_node(node) %>%  html_children() %>% html_attrs()
+  url.temp[j] = temp[[1]][1]
+ }
+
+page.url.all = c(page1.url, url.temp)
+
+url.all = as.data.frame(paste0("http://www.shicimingju.com", page.url.all))
+
+head(url.all)
+
+# 连接接字符，paste和paste0
+```
+
+艾玛，终于弄出来了，3459个网址。
+
+
+### 然后把所有这3459个网址的词提取出来
+
+还是得循环啊。。。
+
+```{r}
+
+sushi.all = c(1:3459)
+
+for (i in 1:3459)
+  {
+  temp = read_html(as.character(url.all[i,]))
+  sushi.all[i] = html_nodes(temp,".shicineirong")%>% html_text  
+  }
+
+# 这个过程比较长，大概20分钟。。。
+```
+
+赶紧保存下来，可别再抓了。
+
+```{r}
+write.table(sushi.all, file = "sushi.txt", fileEncoding = "utf-8")
+```
+
+## 分析文本
+
+### 分词，也就是把提取到的这些诗词，打散成一个个的词
+
+终于把诗词提取出来，开始分析。
+
+按这个[教程](http://www.rpubs.com/jeeplee/songci),有个包叫[“结巴”](https://www.r-project.org/nosvn/pandoc/jiebaR.html)，可以做这方面的工作。
+
+有个比较老的[视频](https://www.youtube.com/watch?v=Q0KtSBzqAx4)，也介绍了一些相关的内容。
+
+
+```{r}
+library("jiebaR")
+library("tm")
+
+library("wordcloud2") # 词云分析
+```
+
+文本分析，先把一大坨文本打散，不是随机打散，而是按照特定辞典打，然后分析哪些词出现的多那些少，谁跟谁距离比较近，用文字云的方式表现，或者分析文本之间相似性等。也有更深入的分析，比如[这个台湾人讲的](https://www.youtube.com/watch?v=AaL6eRx1_lQ)，有空再听听，了解下不同的需求，不同的角度。
+
+如果想把苏仙的词打散，必须要对其涉及的词有个模板，模板肯定没法全部覆盖，还得有算法。比如苏仙说`墙里秋千墙外道。墙外行人，墙里佳人笑。`打散了以后如果“墙”出现的多，肯定会让人费解，如果对照的词典能按照“墙里”，“墙外”分析，就会靠谱的多。
+
+不搞那么复杂了，简单统计一下词频，做个词云就算了把。
+
+参考[分析红楼梦的一篇博文](https://rpubs.com/DaiTu/227559)。
+
+```{r}
+# 看看每首词有多少个字。
+
+nchar(sushi.all)
+
+# 这里面有两个问题，一是有的词后面有些注释，如：“(樯橹一作：强掳)故国神游，多情应笑我，早生华发。人生如梦，一尊还酹江月。(人生 一作：人间；尊 通：樽) \r\n”。二是nchar把标点符号也放进去了，该去掉。
+
+# 那些注释文字比例很小，也没法一个个检查过去，不管了，把标点和\r\n之类的英文字符和空格去掉。
+```
+
+为了去掉一些噪音，用下面的`grep`函数把有r,n空格啥的都去掉。
+
+```{r}
+sushi.vector = as.vector(sushi.all)
+
+za.r = grep(sushi.vector, pattern = "\r")
+za.n = grep(sushi.vector, pattern = "\n")
+za.k = grep(sushi.vector, pattern = " ")
+
+# 三个结果一样。
+
+sushi.clean = sushi.vector[-za.r]
+```
+
+
+
+原来这样不是把每首诗里面的那个去掉，而是只要有那些字符的都给去掉。弄完了只剩下3343了。先这么滴吧，急用先学，现在先做分词，和词云，记一下grep的用法。
+
+```{r}
+text <- c("We are the world", "we are the children")
+grep("We", text) 
+#向量text中的哪些元素匹配了单词'We',得到1.
+```
+
+
+```{r}
+library(jiebaR)
+```
+
+看其[官方说明网站](http://qinwenfeng.com/jiebaR/section-3.html#section-3.0.1)，分词很简单。
+
+```{r}
+sushi.fenci = segment(sushi.clean, worker())
+str(sushi.fenci)
+```
+
+直接把苏轼的词分解成了148820个词。完全不考虑本来的dataframe的格式。
+
+再看看把没去掉那一百多首词时候怎么分的。
+
+```{r}
+sushi.all.fenci = segment(sushi.all, worker())
+str(sushi.all.fenci)
+```
+多了，成了154088个词。
+
+
+### 生成词云
+```{r}
+library(wordcloud2) 
+sushi.freq = freq(sushi.all.fenci) 
+wordcloud2(sushi.freq, size = 2, minSize = 9, fontFamily = "微软雅黑",
+           color = "random-light", backgroundColor = "grey")
+
+# minSize是用来控制出现几次以上的词频的。
+```
+
+两个问题，一是没有特别调用古诗文字典，分词依据有问题。二是这里面单字比较多，应该把词和字分开，或者把一个字的、两个字的、三个字的分开。
+
+关于第一个问题，看了下搜狗的古诗文辞典，都是把句子当成词细胞来存储的，不适合打散，就不换了，这么凑合吧。
+
+关于第二个问题，对不同个数的词进行分类。
+
+
+```{r}
+# 使用stringr包的str_count函数。http://blog.fens.me/r-stringr/
+
+library(stringr)
+```
+
+这是抽出来的单字。除了一些常用语，比如为、在、去、来、将、啥的，能看得见的，也有一些很能体现苏轼性情的，比如诗251次，酒160次，嗯，且将新火煮新茶，诗酒任年华。
+
+```{r}
+wordcloud2(sushi.freq[str_count(sushi.freq$char) == 1,], 
+           size = 2, minSize = 6, fontFamily = "微软雅黑",color = "random-light",
+           backgroundColor = "grey")
+```
+
+下面是2个字的，比较多用的词有梅花、渊明、君子、蓬莱、白头、崎岖、酒杯等等。。。看来苏仙确实混的不怎么如意，要么自比君子学渊明，要么想学神仙去蓬莱，实在没辙了就叹息崎岖并白头，茫然衰病对酒杯。
+
+```{r}
+wordcloud2(sushi.freq[str_count(sushi.freq$char) == 2,], 
+           size = 2, minSize = 6, fontFamily = "微软雅黑",color = "random-light",
+           backgroundColor = "grey")
+```
+
+三个字以上的的词，剩下的比较少了，应该是经过上面的seg，剩下的字数多的词不多了，即使有也就出现一两次——都是些佶屈聱牙的词，或者是被抽词抽剩下的。
+
+```{r}
+wordcloud2(sushi.freq[str_count(sushi.freq$char) > 2,], 
+           size = 2, minSize = 6, fontFamily = "微软雅黑",color = "random-light",
+           backgroundColor = "grey")
+```
+
+词频统计对使用者是黑箱，除了辞典的影响，还有提取词频的算法和模型，起码我都不了解，对诗词肯定有不太合适的地方，看看提取出来的词频为5的词。
+```{r}
+sushi.freq[str_count(sushi.freq$char) == 3 & sushi.freq$freq == 5,]
+```
+
+这些词是什么鬼？看来分词分的肯定有不合理的地方，不过剩下这些不多，大概不影响大局。
+
+### 词频统计
+
+统计出现最多的20个单字、双字词、多字词。
+
+```{r}
+sushi.fenci.1 = sushi.freq[str_count(sushi.freq$char) == 1,]
+sushi.fenci.2 = sushi.freq[str_count(sushi.freq$char) == 2,]
+sushi.fenci.duo = sushi.freq[str_count(sushi.freq$char) > 2,]
+
+# 按不同字数分开，然后用arrange排序。
+```
+
+```{r}
+arrange(sushi.fenci.1, desc(sushi.fenci.1$freq))[1:20,]
+arrange(sushi.fenci.2, desc(sushi.fenci.2$freq))[1:20,]
+arrange(sushi.fenci.duo, desc(sushi.fenci.duo$freq))[1:20,]
+```
+
+也可以按每首诗进行分词，然后统计词频。
+
+```{r}
+sushi.each = apply_list(as.list(sushi.clean), worker())
+head(sushi.each)
+
+# 对每一首词进行分词，要先变成list格式，然后用apply_list。之前用apply试了好几次没有成功。据说从初步接触到入门的标志就是熟练使用apply系列函数，看来我还没入门。。。
+```
+
+还有很多其他统计的角度，这些结果出来，关键还是要联系实际，进行分析。正好像小学生论文里，统计出词频来只是出发点，以此为基础，戏肉在后面。
+
+
+## 小结一下
+
+还有学习过程中几点想法，一块放在小结里。
+
+1、原始数据基于网站，里面有些可能缺失，可能不太严谨。如这个[《失调名》](http://www.shicimingju.com/chaxun/list/282546.html),只有一句，不明所以。
+
+2、严肃分析的话可以分诗词，分年代，分词牌名，分地点，有了这么丰富的数据和工具，动不动换个姿势都可以再来一次。
+
+3、感觉这个可能算不上大数据，一共几千首诗词，真要分析，应该一首一首过一遍，把词人工打散做出辞典来，然后进行分析。苏仙的诗词还是值得这么干的。弄不好还能出个论文，哈哈。
+
+4、在学习相关统计方法的时候，最好读官方文档，废话不多，简单直接。一些二手的学习博文（比如本文），可以借鉴思路了解概念，但真要学透一种方法、一个包或者一个函数，还是官方文档。
+
+5、总结一下在R语言环境下可以用来分析苏轼的“一段程序”。
+
+```{r}
+# install.packages("rvest", "XML", "xml2", "tidyverse", "tm", "wordcloud2", "jiebaR") 
+############################ 安装必须的包
+# library(rvest)
+# library(xml2)
+# library(XML)
+# library(tidyverse)
+# library(tm)
+# library(wordcloud2) 
+# library(jiebaR)
+############################载入安装的包
+
+# url.temp = c(1:40) #用来存储每一页的40个网址
+
+# for (i in 1:86)  # 从第一页开始一直到最后一页，看一共几页就把86改成几，注意别算最后一页
+#  {
+#    url = paste0("http://www.shicimingju.com/chaxun/zuozhe/9_", i, ".html#chaxun_miao") 
+#   定义第i页的网址
+  
+#   for (j in 1:40)
+#    {
+#    node = paste0("div.shicilist ul:nth-child(", j, ") li") # 定义第j个子node。
+#    page.temp = read_html(url)                              # 读取第i页的网址
+#    temp = page.temp %>% html_node(node) %>%  html_children() %>% html_attrs() 
+#    提取第i页网址，第j个诗词的url
+#    url.temp[j] = temp[[1]][1]  # j从1到40，这一页的网址写入url.temp。
+#    }
+#  
+#    if (i == 1)
+#     {
+#       page.url = url.temp
+#     }
+#     else
+#     {
+#      page.url = c(page.url, url.temp) 
+#     }
+#   }
+############################找到所有的url
+
+# sushi.all = c(1:3459)
+
+#  for (i in 1:3459)
+#   {
+#   temp = read_html(as.character(url.all[i,]))
+#   sushi.all[i] = html_nodes(temp,".shicineirong")%>% html_text  
+#   }
+
+############################提取所有的诗文
+
+# sushi.fenci = segment(sushi.all, worker())
+# sushi.fenci.2 = sushi.freq[str_count(sushi.freq$char) == 2,]
+# arrange(sushi.fenci.2, desc(sushi.fenci.2$freq))[1:20,]
+
+############################分词，统计两个字的词频
+
+# sushi.freq = freq(sushi.fenci) 
+# wordcloud2(sushi.freq, size = 2, minSize = 9, fontFamily = "微软雅黑",
+#           color = "random-light", backgroundColor = "grey")
+
+############################做个词云图
+```
+
