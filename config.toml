@@ -43,7 +43,7 @@ defaultContentLanguageInSubdir = false
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
   avatar = "face.png"  # Specify an  avatar image (in `static/img/` folder) or delete value to disable avatar.
   email = "123456ae@163.com"
-  address = "Wenhua road 42, Jinan, Shandong, 250014, China"
+  address = "Jinan, Shandong, China"
   telegram = ""
 
   # Enable Keybase in Contact section by entering your keybase.io username.

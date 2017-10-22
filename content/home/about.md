@@ -21,13 +21,13 @@ weight = 5
 # List your qualifications (such as academic degrees).
 [[education.courses]]
   course = "生态学"
-  institution = "山东大学"
+  institution = "某双一流大学"
   year = 2005
 
 
 [[education.courses]]
   course = "生物技术"
-  institution = "山东大学"
+  institution = "某双一流大学"
   year = 2001
  
 +++
@@ -40,7 +40,3 @@ weight = 5
 叶公好龙的数据分析爱好者。
 
 > 轻度R语言崇拜。
-
-努力对抗危机的中年人。
-
-> 生活不止眼前的苟且，还有以前和将来的苟且，尽量好好对待。
