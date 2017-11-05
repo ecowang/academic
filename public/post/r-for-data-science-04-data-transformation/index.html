@@ -140,7 +140,7 @@
 
   
   <span class="article-reading-time">
-    1 min read
+    12 min read
   </span>
   
 
@@ -221,6 +221,399 @@
 
     <div class="article-style" itemprop="articleBody">
       <p><a href="http://r4ds.had.co.nz/transform.html">本章</a>讲数据变形。</p>
+<div class="section level2">
+<h2>简介</h2>
+<p>通过数据可视化能够发现很多隐含的信息，但一般很难拿到数据能直接进行可视化，由于数据格式不对，要经过整理和变形，按某个变量排序，重命名变量或者增加新变量等操作。这些操作说起来简单，放到excel里点一点鼠标都有了，结合数据透视表也能实现这些目的。之所以要在R里也做这些，可以类比一下，美国已经有GPS系统了，我们为什么拼了命的还要搞北斗呢？不是一个系统，操作起来不顺手嘛。作为一个语言，应该能完成体系性的操作。这些操作原来在R的基础语句中，可以通过aply系列完成，但这个系列语句意思晦涩比较难以掌握，Hadley写了<code>dplyr</code>包以后,基本此类操作都是用他的函数。</p>
+<div class="section level3">
+<h3>5.1.1 预要求</h3>
+<p>本章主要介绍<code>dplyr</code>包的用法，次包是<code>tidyverse</code>系列包的一个重要组成，<code>tidyverse</code>是Hadley组织的一个系列包，里面主要包含他写的，也有几个其他的关于数据处理统计作图的包。这年头，大家都在建立生态圈，这个小小的统计领域也不例外，R通过开源聚集了一大批拥趸，而里面也有不同的流派和领域，<code>tidyverse</code>就是一个重要的，优质的流派。记得有一次Hadely讲座时候有人问他，这些包的功能能否纳入到R的基本功能里，他神秘的笑着，说，这不大可能。可能是我想多了，当时觉得，R的江湖也是波诡云谲啊，先到咸阳为王上，后来者哪怕再优秀，也要经过不断的斗争，形成气候才有可能受到招安。</p>
+<p>回到<code>dplyr</code>包，练习数据使用<code>nycflights13</code>包，使用<code>ggplot2</code>来做图，帮助我们理解所完成的变形，和变形的目的。</p>
+<pre class="r"><code>library(nycflights13)
+library(tidyverse)</code></pre>
+<pre><code>## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr</code></pre>
+<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
+<pre><code>## filter(): dplyr, stats
+## lag():    dplyr, stats</code></pre>
+<p>注意！载入<code>didyverse</code>以后，会有提示信息，说哪些函数把base R里的函数给覆盖了，基础包<code>stats</code>里有几个函数名和和本包里面重名，如<code>filter</code>和<code>lag</code>，如果还想要用基础包里的这俩函数，需要用<code>stats::filter()</code>和<code>stats::lag()</code>。当然一般用不着，因为，这几个函数比基础包里的好用太多了。</p>
+</div>
+<div id="nycflights13" class="section level3">
+<h3>5.1.2 nycflights13</h3>
+<p>nycflights13包里面的flights，收集了纽约2013年336776架飞机的起飞降落飞行时间等信息。打出来看看是这样的。</p>
+<pre class="r"><code>flights</code></pre>
+<pre><code>## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<p>如果之前接触过R，可以发现这个数据有点不一样，看着像数据框data frame，但上面写着个<code>tibble</code>。tibble是Hadley创造的一种数据格式，和数据框类似，但更加灵活，里面不但可以再套数据框，还可以套模型，几乎啥都能套进去。后面会有建模的问题，使用这个格式，能更方便地建模，后面会有更多了解。</p>
+<p>数据的介绍里，仅对前面几列做了说明，如果要都看得用<code>View(flights)</code>。说明中有列的名称，和数据类型，数据类型包括以下这些。</p>
+<ul>
+<li><p><code>int</code> stands for integers. 整数。</p></li>
+<li><p><code>dbl</code> stands for doubles, or real numbers.实数，浮点。</p></li>
+<li><p><code>chr</code> stands for character vectors, or strings.字符。</p></li>
+<li><p><code>dttm</code> stands for date-times (a date + a time).日期+时间。</p></li>
+</ul>
+<p>还有几种会遇到数据类型：</p>
+<ul>
+<li><p><code>lgl</code> stands for logical, vectors that contain only <code>TRUE</code> or <code>FALSE</code>.逻辑变量。</p></li>
+<li><p><code>fctr</code> stands for factors, which R uses to represent categorical variables with fixed possible values.因子，即具有固定值得分类变量。</p></li>
+<li><p><code>date</code> stands for dates.日期。</p></li>
+</ul>
+</div>
+<div id="dplyr-" class="section level3">
+<h3>dplyr 基础</h3>
+<p>主要学5个函数，包括：</p>
+<ul>
+<li><p>按数值选择变量 (<code>filter()</code>)。比如我有一批树高的测量值，想只分析1999-2011年栽植的，就可以用这个函数进行筛选，函数名也很只管，filter，就是要按要求filter特定的行，相当于excel里，先按一列排序，然后再选择范围内的行。</p></li>
+<li><p>排序 (<code>arrange()</code>)。类比excel，按某一列进行排序，可以正着排也可以倒着排。</p></li>
+<li><p>按其名称选择变量 (<code>select()</code>)。</p></li>
+<li><p>(<code>mutate()</code>)。这个太有用了，基于已有的变量，用函数产生新变量。</p></li>
+<li><p>汇总统计值 (<code>summarise()</code>)。</p></li>
+</ul>
+<p>重要的！以上函数都可以和一个伟大的函数合作使用——<code>group_by()</code>。这个函数能够进行不同的分组，然后让上面那些函数充分发挥作用。这非常5+1个函数弄熟了，数据基础操作就差不多了。</p>
+<p>这些函数使用方式都很相似：</p>
+<ol style="list-style-type: decimal">
+<li><p>第一个参数是要操作的数，一般以数据框的结构输入，可以是dataframe，最好是tibble。</p></li>
+<li><p>接下来是数据框的变量名，是函数具体要搞的对象。</p></li>
+<li><p>产出的结果都是数据框。</p></li>
+</ol>
+</div>
+</div>
+<div id="-filter" class="section level2">
+<h2>用 <code>filter()</code>，选择感兴趣的子数据框。</h2>
+<p>顾名思义，filter，就是用来筛选的，筛选出来形成一个新的数据框。如针对飞机数据，想选择1月1日起飞降落的飞机数据，可以这样写：</p>
+<pre class="r"><code>filter(flights, month == 1, day == 1)</code></pre>
+<pre><code>## # A tibble: 842 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 832 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<p>注意这里产生了新的数据框，但没有赋给任何一个对象，如要保存，需要自己定义赋值。可以用= 也可以用箭头。</p>
+<pre class="r"><code>jan1 &lt;- filter(flights, month == 1, day == 1) 
+# 这个箭头的方向和等号相同。</code></pre>
+<p>如果我们想既赋值，又在控制器里显示出来，可以这样写，把语句放在括号里就行了：</p>
+<pre class="r"><code>(dec25 &lt;- filter(flights, month == 12, day == 25))</code></pre>
+<pre><code>## # A tibble: 719 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    12    25      456            500        -4      649
+##  2  2013    12    25      524            515         9      805
+##  3  2013    12    25      542            540         2      832
+##  4  2013    12    25      546            550        -4     1022
+##  5  2013    12    25      556            600        -4      730
+##  6  2013    12    25      557            600        -3      743
+##  7  2013    12    25      557            600        -3      818
+##  8  2013    12    25      559            600        -1      855
+##  9  2013    12    25      559            600        -1      849
+## 10  2013    12    25      600            600         0      850
+## # ... with 709 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<div class="section level3">
+<h3>几个比较符号</h3>
+<p>要使用filter，肯定要界定条件，需要这几个比较符号：<code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>!=</code> (不等于), and <code>==</code> (等于)。</p>
+<p>注意， <code>=</code>，和<code>==</code>的区别。前一个是赋值，后一个才是等于，弄错了可能会有错误信息提示。</p>
+<pre class="r"><code>filter(flights, month = 1)</code></pre>
+<pre><code>## Error: `month` (`month = 1`) must not be named, do you need `==`?</code></pre>
+<p>注意2，当涉及浮点数的时候，计算机算不准。看看开方以后再乘方，或者除不尽的再乘回去的结果：</p>
+<pre class="r"><code>sqrt(2) ^ 2 == 2</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>1/49 * 49 == 1</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>因为这种情况下计算机存储的数，都是<strong>近似值</strong>！所以这种情况下，不要用<code>==</code>，要用<code>near()</code>。</p>
+<pre class="r"><code>near(sqrt(2) ^ 2,  2)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>near(1 / 49 * 49, 1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div class="section level3">
+<h3>逻辑符号（布林运算符）</h3>
+<p>数据集里各变量之互有关系，有时候要用逻辑符号进行精准选择。 如<code>&amp;</code>是“和”, <code>|</code> 是 “或”, ， <code>!</code> 是 “非”。见下图：</p>
+<div class="figure">
+<img src="http://r4ds.had.co.nz/diagrams/transform-logical.png" alt="两个变量间的逻辑运算符" />
+<p class="caption">两个变量间的逻辑运算符</p>
+</div>
+<p>如选择11、12月的飞机：</p>
+<pre class="r"><code>filter(flights, month == 11 | month == 12)</code></pre>
+<p>作者还提供了一种方式，是使用 <code>x %in% y</code>， 这会把所有y里有的x所在的行挑出来。下面代码和上面作用相同。</p>
+<pre class="r"><code>nov_dec &lt;- filter(flights, month %in% c(11, 12))</code></pre>
+<p>有时可以用De Morgan法则来记忆： <code>!(x &amp; y)</code> 等价于 <code>!x | !y</code>,还有 <code>!(x | y)</code>等价于 <code>!x &amp; !y</code>。</p>
+<p>除了 <code>&amp;</code> 和 <code>|</code>, R 还有 <code>&amp;&amp;</code> 和 <code>||</code>。这里还不会涉及，到[conditional execution]会有介绍。</p>
+</div>
+<div class="section level3">
+<h3>缺失值</h3>
+<p>在R里面，缺失值很让人头疼，当然在其他体系里面也各有毛病，毕竟缺了，怎么处理都麻烦。 <code>NA</code>的意思是 (“not availables”)，excel里的空白，读取到r里面就是NA。excel里也是凑合着把空白当成0。而在R里面，NA有传染性，涉及到的结果很多都会变成NA。</p>
+<pre class="r"><code>NA &gt; 5</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>10 == NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>NA + 10</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>NA / 2</code></pre>
+<pre><code>## [1] NA</code></pre>
+<p>更奇葩的结果是这个：</p>
+<pre class="r"><code>NA == NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<p>如果想要知道一个值是否缺失，使用<code>is.na()</code>。</p>
+<p><code>filter()</code> 默认忽略 <code>FALSE</code> 和 <code>NA</code> 值，如果想要表现缺失值，要在函数中自行明确。</p>
+<pre class="r"><code>df &lt;- tibble(x = c(1, NA, 3))
+filter(df, x &gt; 1)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##       x
+##   &lt;dbl&gt;
+## 1     3</code></pre>
+<pre class="r"><code>filter(df, is.na(x) | x &gt; 1)</code></pre>
+<pre><code>## # A tibble: 2 x 1
+##       x
+##   &lt;dbl&gt;
+## 1    NA
+## 2     3</code></pre>
+</div>
+<div class="section level3">
+<h3>练习作业</h3>
+<ol style="list-style-type: decimal">
+<li><p>找到如下条件的飞机</p>
+<ol style="list-style-type: decimal">
+<li>晚点2小时及以上。</li>
+</ol>
+<pre class="r"><code>filter(flights, arr_delay&gt;=120)</code></pre>
+<pre><code>## # A tibble: 10,200 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      811            630       101     1047
+##  2  2013     1     1      848           1835       853     1001
+##  3  2013     1     1      957            733       144     1056
+##  4  2013     1     1     1114            900       134     1447
+##  5  2013     1     1     1505           1310       115     1638
+##  6  2013     1     1     1525           1340       105     1831
+##  7  2013     1     1     1549           1445        64     1912
+##  8  2013     1     1     1558           1359       119     1718
+##  9  2013     1     1     1732           1630        62     2028
+## 10  2013     1     1     1803           1620       103     2008
+## # ... with 10,190 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>飞往 Houston (<code>IAH</code> or <code>HOU</code>)</li>
+</ol>
+<pre class="r"><code>filter(flights, dest==&quot;IAH&quot; | dest ==&quot;HOU&quot;)</code></pre>
+<pre><code>## # A tibble: 9,313 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      623            627        -4      933
+##  4  2013     1     1      728            732        -4     1041
+##  5  2013     1     1      739            739         0     1104
+##  6  2013     1     1      908            908         0     1228
+##  7  2013     1     1     1028           1026         2     1350
+##  8  2013     1     1     1044           1045        -1     1352
+##  9  2013     1     1     1114            900       134     1447
+## 10  2013     1     1     1205           1200         5     1503
+## # ... with 9,303 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre class="r"><code>filter(flights, dest %in% c(&quot;IAH&quot;, &quot;HOU&quot;))</code></pre>
+<pre><code>## # A tibble: 9,313 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      623            627        -4      933
+##  4  2013     1     1      728            732        -4     1041
+##  5  2013     1     1      739            739         0     1104
+##  6  2013     1     1      908            908         0     1228
+##  7  2013     1     1     1028           1026         2     1350
+##  8  2013     1     1     1044           1045        -1     1352
+##  9  2013     1     1     1114            900       134     1447
+## 10  2013     1     1     1205           1200         5     1503
+## # ... with 9,303 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>由 United, American, 或 Delta运营</li>
+</ol>
+<pre class="r"><code>airlines # 看缩写代表谁</code></pre>
+<pre><code>## # A tibble: 16 x 2
+##    carrier                        name
+##      &lt;chr&gt;                       &lt;chr&gt;
+##  1      9E           Endeavor Air Inc.
+##  2      AA      American Airlines Inc.
+##  3      AS        Alaska Airlines Inc.
+##  4      B6             JetBlue Airways
+##  5      DL        Delta Air Lines Inc.
+##  6      EV    ExpressJet Airlines Inc.
+##  7      F9      Frontier Airlines Inc.
+##  8      FL AirTran Airways Corporation
+##  9      HA      Hawaiian Airlines Inc.
+## 10      MQ                   Envoy Air
+## 11      OO       SkyWest Airlines Inc.
+## 12      UA       United Air Lines Inc.
+## 13      US             US Airways Inc.
+## 14      VX              Virgin America
+## 15      WN      Southwest Airlines Co.
+## 16      YV          Mesa Airlines Inc.</code></pre>
+<pre class="r"><code>filter(flights, carrier %in% c(&quot;UA&quot;, &quot;AA&quot;, &quot;DL&quot;))</code></pre>
+<pre><code>## # A tibble: 139,504 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      554            600        -6      812
+##  5  2013     1     1      554            558        -4      740
+##  6  2013     1     1      558            600        -2      753
+##  7  2013     1     1      558            600        -2      924
+##  8  2013     1     1      558            600        -2      923
+##  9  2013     1     1      559            600        -1      941
+## 10  2013     1     1      559            600        -1      854
+## # ... with 139,494 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>筛选7——9月的飞机班次</li>
+</ol>
+<pre class="r"><code>filter(flights, month %in% c(7,8,9))</code></pre>
+<pre><code>## # A tibble: 86,326 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     7     1        1           2029       212      236
+##  2  2013     7     1        2           2359         3      344
+##  3  2013     7     1       29           2245       104      151
+##  4  2013     7     1       43           2130       193      322
+##  5  2013     7     1       44           2150       174      300
+##  6  2013     7     1       46           2051       235      304
+##  7  2013     7     1       48           2001       287      308
+##  8  2013     7     1       58           2155       183      335
+##  9  2013     7     1      100           2146       194      327
+## 10  2013     7     1      100           2245       135      337
+## # ... with 86,316 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Arrived more than two hours late, but didn’t leave late</li>
+</ol>
+<pre class="r"><code>filter(flights, arr_delay &gt; 120 &amp; dep_delay &lt;= 0)</code></pre>
+<pre><code>## # A tibble: 29 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1    27     1419           1420        -1     1754
+##  2  2013    10     7     1350           1350         0     1736
+##  3  2013    10     7     1357           1359        -2     1858
+##  4  2013    10    16      657            700        -3     1258
+##  5  2013    11     1      658            700        -2     1329
+##  6  2013     3    18     1844           1847        -3       39
+##  7  2013     4    17     1635           1640        -5     2049
+##  8  2013     4    18      558            600        -2     1149
+##  9  2013     4    18      655            700        -5     1213
+## 10  2013     5    22     1827           1830        -3     2217
+## # ... with 19 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Were delayed by at least an hour, but made up over 30 minutes in flight</li>
+</ol>
+<pre class="r"><code>filter(flights, dep_delay &gt;= 60 &amp; (dep_delay - arr_delay) &gt;= 30 )</code></pre>
+<pre><code>## # A tibble: 2,074 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1     1716           1545        91     2140
+##  2  2013     1     1     2205           1720       285       46
+##  3  2013     1     1     2326           2130       116      131
+##  4  2013     1     3     1503           1221       162     1803
+##  5  2013     1     3     1821           1530       171     2131
+##  6  2013     1     3     1839           1700        99     2056
+##  7  2013     1     3     1850           1745        65     2148
+##  8  2013     1     3     1923           1815        68     2036
+##  9  2013     1     3     1941           1759       102     2246
+## 10  2013     1     3     1950           1845        65     2228
+## # ... with 2,064 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Departed between midnight and 6am (inclusive)</li>
+</ol>
+<pre class="r"><code>filter(flights, dep_time &gt;= 2400 | dep_time &lt;= 600)</code></pre>
+<pre><code>## # A tibble: 9,373 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 9,363 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre class="r"><code># 开始觉得应该从time_hour里提取控制值，不过搜了下两三个人都是这么写的，先这么滴吧。</code></pre></li>
+<li><p>Another useful dplyr filtering helper is <code>between()</code>. What does it do? Can you use it to simplify the code needed to answer the previous challenges?</p>
+<p>between(x, left, right) 在左右之间（含），比如可以</p>
+<pre class="r"><code>filter(flights, between(dep_time, 600, 2400))</code></pre>
+<pre><code>## # A tibble: 319,791 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      600            600         0      851
+##  2  2013     1     1      600            600         0      837
+##  3  2013     1     1      601            600         1      844
+##  4  2013     1     1      602            610        -8      812
+##  5  2013     1     1      602            605        -3      821
+##  6  2013     1     1      606            610        -4      858
+##  7  2013     1     1      606            610        -4      837
+##  8  2013     1     1      607            607         0      858
+##  9  2013     1     1      608            600         8      807
+## 10  2013     1     1      611            600        11      945
+## # ... with 319,781 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre></li>
+<li><p>How many flights have a missing <code>dep_time</code>? What other variables are missing? What might these rows represent?</p></li>
+<li><p>Why is <code>NA ^ 0</code> not missing? Why is <code>NA | TRUE</code> not missing? Why is <code>FALSE &amp; NA</code> not missing? Can you figure out the general rule? (<code>NA * 0</code> is a tricky counterexample!)</p></li>
+</ol>
+</div>
+</div>
 
     </div>
   </div>

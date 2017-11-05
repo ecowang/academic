@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>/post/advanced-r-01-data-structures/</loc>
+      <lastmod>2017-10-22T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/post/analyzing-text-data-on-web/</loc>
       <lastmod>2017-10-15T00:00:00+00:00</lastmod>
     </url>
@@ -144,7 +153,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2017-10-15T00:00:00+00:00</lastmod>
+      <lastmod>2017-10-22T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -154,7 +163,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2017-10-15T00:00:00+00:00</lastmod>
+      <lastmod>2017-10-22T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
