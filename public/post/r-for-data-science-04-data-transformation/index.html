@@ -505,7 +505,7 @@ filter(df, x &gt; 1)</code></pre>
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li>筛选7——9月的飞机班次</li>
+<li>筛选7——9月的飞机班次。</li>
 </ol>
 <pre class="r"><code>filter(flights, month %in% c(7,8,9))</code></pre>
 <pre><code>## # A tibble: 86,326 x 19
@@ -526,7 +526,7 @@ filter(df, x &gt; 1)</code></pre>
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <ol start="5" style="list-style-type: decimal">
-<li>Arrived more than two hours late, but didn’t leave late</li>
+<li>起飞没有晚点，但到港晚点两小时以上。</li>
 </ol>
 <pre class="r"><code>filter(flights, arr_delay &gt; 120 &amp; dep_delay &lt;= 0)</code></pre>
 <pre><code>## # A tibble: 29 x 19
@@ -547,7 +547,7 @@ filter(df, x &gt; 1)</code></pre>
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <ol start="6" style="list-style-type: decimal">
-<li>Were delayed by at least an hour, but made up over 30 minutes in flight</li>
+<li>起飞晚点一小时以上，但飞起来找补回来至少半小时。</li>
 </ol>
 <pre class="r"><code>filter(flights, dep_delay &gt;= 60 &amp; (dep_delay - arr_delay) &gt;= 30 )</code></pre>
 <pre><code>## # A tibble: 2,074 x 19
@@ -568,7 +568,7 @@ filter(df, x &gt; 1)</code></pre>
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <ol start="7" style="list-style-type: decimal">
-<li>Departed between midnight and 6am (inclusive)</li>
+<li>凌晨到早上六点之间（含两头）起飞的飞机。</li>
 </ol>
 <pre class="r"><code>filter(flights, dep_time &gt;= 2400 | dep_time &lt;= 600)</code></pre>
 <pre><code>## # A tibble: 9,373 x 19
@@ -589,28 +589,40 @@ filter(df, x &gt; 1)</code></pre>
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <pre class="r"><code># 开始觉得应该从time_hour里提取控制值，不过搜了下两三个人都是这么写的，先这么滴吧。</code></pre></li>
-<li><p>Another useful dplyr filtering helper is <code>between()</code>. What does it do? Can you use it to simplify the code needed to answer the previous challenges?</p>
+<li><p>另一个和filter配合比较好的函数是 <code>between()</code>。它怎么用？你能否用它解决上面的问题吗？</p>
 <p>between(x, left, right) 在左右之间（含），比如可以</p>
-<pre class="r"><code>filter(flights, between(dep_time, 600, 2400))</code></pre>
-<pre><code>## # A tibble: 319,791 x 19
+<pre class="r"><code>filter(flights, between(arr_delay, 30, 60))</code></pre>
+<pre><code>## # A tibble: 25,013 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
 ##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-##  1  2013     1     1      600            600         0      851
-##  2  2013     1     1      600            600         0      837
-##  3  2013     1     1      601            600         1      844
-##  4  2013     1     1      602            610        -8      812
-##  5  2013     1     1      602            605        -3      821
-##  6  2013     1     1      606            610        -4      858
-##  7  2013     1     1      606            610        -4      837
-##  8  2013     1     1      607            607         0      858
-##  9  2013     1     1      608            600         8      807
-## 10  2013     1     1      611            600        11      945
-## # ... with 319,781 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+##  1  2013     1     1      542            540         2      923
+##  2  2013     1     1      559            600        -1      941
+##  3  2013     1     1      608            600         8      807
+##  4  2013     1     1      635            635         0     1028
+##  5  2013     1     1      702            700         2     1058
+##  6  2013     1     1      724            730        -6     1111
+##  7  2013     1     1      732            645        47     1011
+##  8  2013     1     1      749            710        39      939
+##  9  2013     1     1      754            755        -1     1103
+## 10  2013     1     1      826            715        71     1136
+## # ... with 25,003 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
 ## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre></li>
-<li><p>How many flights have a missing <code>dep_time</code>? What other variables are missing? What might these rows represent?</p></li>
-<li><p>Why is <code>NA ^ 0</code> not missing? Why is <code>NA | TRUE</code> not missing? Why is <code>FALSE &amp; NA</code> not missing? Can you figure out the general rule? (<code>NA * 0</code> is a tricky counterexample!)</p></li>
+<li><p>数据里的 <code>dep_time</code>有多少缺失值？其他变量呢？这些含有缺失值的行如何表现？</p>
+<pre class="r"><code>sum(is.na(flights$dep_time))</code></pre>
+<pre><code>## [1] 8255</code></pre>
+<pre class="r"><code>map_dbl(flights, ~ sum(is.na(.x)))</code></pre>
+<pre><code>##           year          month            day       dep_time sched_dep_time 
+##              0              0              0           8255              0 
+##      dep_delay       arr_time sched_arr_time      arr_delay        carrier 
+##           8255           8713              0           9430              0 
+##         flight        tailnum         origin           dest       air_time 
+##              0           2512              0              0           9430 
+##       distance           hour         minute      time_hour 
+##              0              0              0              0</code></pre></li>
+<li><p>为什么 <code>NA ^ 0</code> 不是缺失值？为什么 <code>NA | TRUE</code> 不是缺失值？为什么 <code>FALSE &amp; NA</code> 不是缺失值？你能发现规律吗？(<code>NA * 0</code> 是个有趣的例子)</p>
+<p><code>NA ^ 0</code>是1，因为任何值得0次方都是1。 <code>NA | TRUE</code>用<code>或|</code>连接，返回<code>TURE</code>，<code>FALSE &amp; NA</code>用<code>且&amp;</code>连接，则为FALSE。总结个规律，就是范围的大小关系的规律，FALSE最惨，一错啥都没有，NA好歹算个缺失值，TURE是相对最牛，所以这FALSE 和 NA 放一块按照比惨关系，TURE最牛。</p></li>
 </ol>
 </div>
 </div>

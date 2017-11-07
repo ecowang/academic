@@ -207,27 +207,27 @@ filter(flights, carrier %in% c("UA", "AA", "DL"))
 ```
     
     
-    4. 筛选7——9月的飞机班次
+    4. 筛选7——9月的飞机班次。
     
     ```{r}
 filter(flights, month %in% c(7,8,9))
 ```
     
     
-    5. Arrived more than two hours late, but didn't leave late
+    5. 起飞没有晚点，但到港晚点两小时以上。
     
     ```{r}
 filter(flights, arr_delay > 120 & dep_delay <= 0)
 ```
     
-    6. Were delayed by at least an hour, but made up over 30 minutes in flight
+    6. 起飞晚点一小时以上，但飞起来找补回来至少半小时。
     
     ```{r}
 filter(flights, dep_delay >= 60 & (dep_delay - arr_delay) >= 30 )
 ```
     
     
-    7. Departed between midnight and 6am (inclusive)
+    7. 凌晨到早上六点之间（含两头）起飞的飞机。
     
     ```{r}
 filter(flights, dep_time >= 2400 | dep_time <= 600)
@@ -236,9 +236,7 @@ filter(flights, dep_time >= 2400 | dep_time <= 600)
 ```
     
 
-1.  Another useful dplyr filtering helper is `between()`. What does it do?
-    Can you use it to simplify the code needed to answer the previous 
-    challenges?
+1.  另一个和filter配合比较好的函数是 `between()`。它怎么用？你能否用它解决上面的问题吗？
     
     between(x, left, right) 在左右之间（含），比如可以
     
@@ -247,8 +245,7 @@ filter(flights, between(arr_delay, 30, 60))
 ```
     
 
-1.  How many flights have a missing `dep_time`? What other variables are 
-    missing? What might these rows represent?
+1.  数据里的 `dep_time`有多少缺失值？其他变量呢？这些含有缺失值的行如何表现？
     
     ```{r}
 sum(is.na(flights$dep_time))
@@ -257,11 +254,159 @@ map_dbl(flights, ~ sum(is.na(.x)))
 ```
     
 
-1.  Why is `NA ^ 0` not missing? Why is `NA | TRUE` not missing?
-    Why is `FALSE & NA` not missing? Can you figure out the general
-    rule?  (`NA * 0` is a tricky counterexample!)
+1.  为什么 `NA ^ 0` 不是缺失值？为什么 `NA | TRUE` 不是缺失值？为什么 `FALSE & NA` 不是缺失值？你能发现规律吗？(`NA * 0` 是个有趣的例子)
+
+
+    `NA ^ 0`是1，因为任何值得0次方都是1。 `NA | TRUE`用`或|`连接，返回`TURE`，`FALSE & NA`用`且&`连接，则为FALSE。总结个规律，就是范围的大小关系的规律，FALSE最惨，一错啥都没有，NA好歹算个缺失值，TURE是相对最牛，所以这FALSE 和 NA 放一块按照比惨关系，TURE最牛。
+  
+
+
+## 用 `arrange()`对行排序
+
+`arrange()` 和 `filter()` 使用方式相似，只不过功能不是筛选而是是排序。它用一列或多列进行排序，也可以用基于列的更复杂的计算式来排序。如果是用多列来排序，则按照优先级进行排列。
+
+```{r}
+arrange(flights, year, month, day)
+#按照年、月、日进行排列，正序从小到大。
+```
+
+如果要倒序排列， 则用 `desc()` :
+
+```{r}
+arrange(flights, desc(arr_delay))
+```
+
+缺失值总是放在最后。
+
+```{r}
+df <- tibble(x = c(5, 2, NA))
+arrange(df, x)
+arrange(df, desc(x))
+```
+
+
+
+### Exercises
+
+1.  用 `arrange()` 把缺失值排在前面。提示，用 `is.na()`。
+    
+    ```{r}
+df <- tibble(x = c(5, 2, NA))
+arrange(df, desc(is.na(x)), x)
+# 用is.na() 先按得到的Ture和False排起来，然后再按照x排。
+```
     
     
+1.  对 `flights`，找到晚点最多的飞机，找到起飞最早的飞机。
+    
+    ```{r}
+arrange(flights, desc(arr_delay))
+arrange(flights, dep_delay) 
+# 这里是比计划早。
+```
+    
+
+1.  Sort `flights` to find the fastest flights.
+
+    ```{r}
+arrange(flights, desc(distance/air_time))
+    
+    # 距离除以时间，从大到小。
+```
+
+
+1.  Which flights travelled the longest? Which travelled the shortest?
+
+    ```{r}
+arrange(flights, desc(distance))
+    arrange(flights, distance)
+```
+    
+
+## 用 `select()`选择列
+
+有时候我们会遇到很大的数据，有成百上千的变量，但只有少数是我们感兴趣的，这时候可以用`select()` 选择那些变量，方便地形成子数据集。这个过程是基于变量名进行的。
+
+`select()` 在飞机数据里没有什么用武之地，毕竟只有19个变量，在此仅作示意。
+
+```{r}
+# 按变量名选择变量
+select(flights, year, month, day)
+# 选择year和day变量之间的所有变量
+select(flights, year:day)
+# 选择除了year和day之间数据的所有数据。
+select(flights, -(year:day))
+```
+
+
+结合`select()`还有一些有用的函数。
+
+* `starts_with("abc")`: 匹配以 "abc"开头的变量名。
+
+* `ends_with("xyz")`: 匹配以"xyz"结尾的变量名。
+
+* `contains("ijk")`: 匹配含 "ijk" 的变量名。
+
+* `matches("(.)\\1")`: 匹配含表达式的变量名，如这个是匹配所有含有重复字符的变量。在字符一节还有介绍。
+   
+*  `num_range("x", 1:3)` 匹配 `x1`, `x2` 和 `x3`。
+
+更多用法参见select函数说明。
+
+此外，`select()`也可用于重命名变量，但一般不太用，因为它只保留重命名的那几列。变量重命名用`rename()`，只重命名，不改变其他。
+
+```{r}
+select(flights, tail_num = tailnum)
+rename(flights, tail_num = tailnum)
+# 新的在前面
+```
+
+另一个可能常会用到的函数是 `everything()`，如果想把选择出来的列放前面，可以这样做。
+
+```{r}
+select(flights, time_hour, air_time, everything())
+```
+
+
+### 练习
+
+1.  Brainstorm as many ways as possible to select `dep_time`, `dep_delay`,
+    `arr_time`, and `arr_delay` from `flights`.
+    
+1.  What happens if you include the name of a variable multiple times in
+    a `select()` call?
+  
+1.  What does the `one_of()` function do? Why might it be helpful in conjunction
+    with this vector?
+    
+    ```{r}
+    vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+    ```
+    
+1.  Does the result of running the following code surprise you?  How do the
+    select helpers deal with case by default? How can you change that default?
+
+    ```{r, eval = FALSE}
+    select(flights, contains("TIME"))
+    ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
