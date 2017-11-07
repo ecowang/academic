@@ -361,7 +361,7 @@ rename(flights, tail_num = tailnum)
 # 新的在前面
 ```
 
-另一个可能常会用到的函数是 `everything()`，如果想把选择出来的列放前面，可以这样做。
+另一个可能常会用到的函数是 `everything()`，如果想把选择出来的列放前面，其他列也保留着，可以这样做。
 
 ```{r}
 select(flights, time_hour, air_time, everything())
@@ -370,11 +370,25 @@ select(flights, time_hour, air_time, everything())
 
 ### 练习
 
-1.  Brainstorm as many ways as possible to select `dep_time`, `dep_delay`,
-    `arr_time`, and `arr_delay` from `flights`.
+1.  头脑风暴，想出尽可能多的选择 `dep_time`, `dep_delay`,
+    `arr_time`,和 `arr_delay` 的方法。
     
-1.  What happens if you include the name of a variable multiple times in
-    a `select()` call?
+    ```{r, eval= FALSE}
+select(flights, dep_time,  dep_delay, arr_time, arr_delay)
+select(flights, c(dep_time,  dep_delay, arr_time, arr_delay))
+flights %>% select(dep_time,  dep_delay, arr_time, arr_delay)
+
+flights %>% select(matches("^dep|^arr"))
+```
+    
+    
+1.  在 `select()` 函数中，多次选择一个变量会怎么样？
+
+    ```{r}
+flights %>% select(dep_delay, dep_delay, dep_delay)
+    # 和选一个效果一样。
+```
+
   
 1.  What does the `one_of()` function do? Why might it be helpful in conjunction
     with this vector?
