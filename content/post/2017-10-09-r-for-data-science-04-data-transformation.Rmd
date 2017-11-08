@@ -390,21 +390,188 @@ flights %>% select(dep_delay, dep_delay, dep_delay)
 ```
 
   
-1.  What does the `one_of()` function do? Why might it be helpful in conjunction
-    with this vector?
+1. 函数`one_of()` 的功能是什么？为什么对下面的文本向量的操作有用？
     
     ```{r}
     vars <- c("year", "month", "day", "dep_delay", "arr_delay")
     ```
     
-1.  Does the result of running the following code surprise you?  How do the
-    select helpers deal with case by default? How can you change that default?
+    这是`dplyr`包里的一个函数，属于`select_helpers`家族的一份子，顾名思义，任何一个在文本向量里有的变量，都能选择出来（variables in character vector.）。
+    
+    ```{r}
+    flights %>% select(one_of(vars))
+    
+    select(flights, one_of(vars))
+    ```
+    
+    
+1.  以下代码运行结果让你惊讶否？选择帮助默认如何处理这样的情况？你能如何改变默认设置？
 
     ```{r, eval = FALSE}
     select(flights, contains("TIME"))
     ```
+    
+    没有让我惊讶。可能作者想让我们认为这样会把变量名为“time”的变量选择出来，结果把所有里面含有”time“的都选出来。但contain意思本来就是含有，这样的结果很符合预期。如只想要time，则可以直接写，可以用match，也可以用one_of，当然用contain也可以，只需要把`contains(match, ignore.case = TRUE, vars = current_vars())`里面默认的ignore.case = TURE，改成FALSE就行了。此例中，没有这个变量：
+    
+    ```{r}
+    select(flights, contains("TIME", ignore.case = FALSE))
+    
+    select(flights, "TIME")
+    
+    # 区别在于后面这个选不出来直接一个Error：Strings must match column names. Unknown columns: TIME。前面那样，产生一个多行0列的tibble。
+    ```
 
+## 使用`mutate()`函数，增加新变量
 
+除了使用已有变量对数据集进行选择，很多时候也需要通过原有变量建立新变量，然后再基于新变量进行选择，函数 `mutate()`就是负责干这个活。mutate，就是改变，突变的意思。
+
+`mutate()` 总是把新产生的变量放到数据集最后的列，飞机数据太宽，后面的列看不见，所以这里新做一个窄点的数据集。记住在Rstudio里面，查看全部数据最简单的方法就是使用`View()`另外注意，如果数据集太大，Rstudio在view后容易崩溃。
+
+```{r}
+flights_sml <- select(flights, 
+  year:day, 
+  ends_with("delay"), 
+  distance, 
+  air_time
+)
+mutate(flights_sml,
+  gain = arr_delay - dep_delay,
+  speed = distance / air_time * 60
+)
+```
+
+注意刚刚新建的变量，后面也可以纳入计算，如下面，刚新建的gain，后面就用上了。
+
+```{r}
+mutate(flights_sml,
+  gain = arr_delay - dep_delay,
+  hours = air_time / 60,
+  gain_per_hour = gain / hours
+)
+```
+
+如果只想保留新建变量，则使用 `transmute()`:
+
+```{r}
+transmute(flights,
+  gain = arr_delay - dep_delay,
+  hours = air_time / 60,
+  gain_per_hour = gain / hours
+)
+```
+
+### 常用新建变量的函数
+
+结合 `mutate()`，有很多新建变量的函数可以使用。注意能使用的函数都是向量式的（must be vectorised），即：输入的是向量（老变量），输出的还是向量（新变量）。想把能用的函数都列出来肯定不可能，在此仅对常用的一些做一概述：
+
+*   算术运算相关: `+`, `-`, `*`, `/`, `^`。这些都有向量式操作的特点，另外使用运算符的时候会有循环法则，即当两个向量长度不一时，短的自动循环到和长的一样长度（想想在excel里复制粘帖时候的状态），这个特点在涉及单一数字（也是个长度为一的向量）时很好用 ，如`air_time / 60`,
+    `hours * 60 + minute`，等。
+    
+    运算符和汇总类函数（aggregate functions，后面还会学到）也可以配合使用。如`x / sum(x)`，计算占总数的比例，`y - mean(y)`计算的是和平均值得差别。
+    
+*   模块运算符（Modular arithmetic）: `%/%` (整除) 和 `%%` (求余数), 即：
+    `x == y * (x %/% y) + (x %% y)`. 模块运算符是很有用的工具，因为它能够把除法中涉及的整数提取出来用如飞机数据中，可通过`dep_time` 计算`hour` 和 `minute` :
+    
+    ```{r}
+    transmute(flights,
+      dep_time,
+      hour = dep_time %/% 60,
+      minute = dep_time %% 60
+    )
+    # 原文中是除以100，按分钟应该是除以60吧？
+    ```
+  
+*   对数系列: `log()`, `log2()`, `log10()`. Logarithms are an incredibly useful
+    transformation for dealing with data that ranges across multiple orders of
+    magnitude. They also convert multiplicative relationships to additive, a
+    feature we'll come back to in modelling.
+    
+    All else being equal, I recommend using `log2()` because it's easy to
+    interpret: a difference of 1 on the log scale corresponds to doubling on
+    the original scale and a difference of -1 corresponds to halving.
+
+*   Offsets: `lead()` and `lag()` allow you to refer to leading or lagging 
+    values. This allows you to compute running differences (e.g. `x - lag(x)`) 
+    or find when values change (`x != lag(x))`. They are most useful in 
+    conjunction with `group_by()`, which you'll learn about shortly.
+    
+    ```{r}
+    (x <- 1:10)
+    lag(x)
+    lead(x)
+    ```
+  
+*   Cumulative and rolling aggregates: R provides functions for running sums,
+    products, mins and maxes: `cumsum()`, `cumprod()`, `cummin()`, `cummax()`; 
+    and dplyr provides `cummean()` for cumulative means. If you need rolling
+    aggregates (i.e. a sum computed over a rolling window), try the RcppRoll
+    package.
+    
+    ```{r}
+    x
+    cumsum(x)
+    cummean(x)
+    ```
+
+*   Logical comparisons, `<`, `<=`, `>`, `>=`, `!=`, which you learned about
+    earlier. If you're doing a complex sequence of logical operations it's 
+    often a good idea to store the interim values in new variables so you can
+    check that each step is working as expected.
+
+*   Ranking: there are a number of ranking functions, but you should 
+    start with `min_rank()`. It does the most usual type of ranking 
+    (e.g. 1st, 2nd, 2nd, 4th). The default gives smallest values the small
+    ranks; use `desc(x)` to give the largest values the smallest ranks. 
+    
+    ```{r}
+    y <- c(1, 2, 2, NA, 3, 4)
+    min_rank(y)
+    min_rank(desc(y))
+    ```
+    
+    If `min_rank()` doesn't do what you need, look at the variants
+    `row_number()`, `dense_rank()`, `percent_rank()`, `cume_dist()`,
+    `ntile()`.  See their help pages for more details.
+    
+    ```{r}
+    row_number(y)
+    dense_rank(y)
+    percent_rank(y)
+    cume_dist(y)
+    ```
+
+### Exercises
+
+```{r, eval = FALSE, echo = FALSE}
+flights <- flights %>% mutate(
+  dep_time = hour * 60 + minute,
+  arr_time = (arr_time %/% 100) * 60 + (arr_time %% 100),
+  airtime2 = arr_time - dep_time,
+  dep_sched = dep_time + dep_delay
+)
+
+ggplot(flights, aes(dep_sched)) + geom_histogram(binwidth = 60)
+ggplot(flights, aes(dep_sched %% 60)) + geom_histogram(binwidth = 1)
+ggplot(flights, aes(air_time - airtime2)) + geom_histogram()
+```
+
+1.  Currently `dep_time` and `sched_dep_time` are convenient to look at, but
+    hard to compute with because they're not really continuous numbers. 
+    Convert them to a more convenient representation of number of minutes
+    since midnight.
+    
+1.  Compare `air_time` with `arr_time - dep_time`. What do you expect to see?
+    What do you see? What do you need to do to fix it?
+    
+1.  Compare `dep_time`, `sched_dep_time`, and `dep_delay`. How would you
+    expect those three numbers to be related?
+
+1.  Find the 10 most delayed flights using a ranking function. How do you want 
+    to handle ties? Carefully read the documentation for `min_rank()`.
+
+1.  What does `1:3 + 1:10` return? Why?
+
+1.  What trigonometric functions does R provide?
 
 
 
