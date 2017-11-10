@@ -481,31 +481,20 @@ transmute(flights,
     # 原文中是除以100，按分钟应该是除以60吧？
     ```
   
-*   对数系列: `log()`, `log2()`, `log10()`. Logarithms are an incredibly useful
-    transformation for dealing with data that ranges across multiple orders of
-    magnitude. They also convert multiplicative relationships to additive, a
-    feature we'll come back to in modelling.
+*   对数系列: `log()`, `log2()`, `log10()`。 对数变换起码在两种情况极其有用：一是对付量级差别较大的数据，二是以后再模型一节还会提到的，把倍数关系转变为增减关系。
     
-    All else being equal, I recommend using `log2()` because it's easy to
-    interpret: a difference of 1 on the log scale corresponds to doubling on
-    the original scale and a difference of -1 corresponds to halving.
+    几个转换方式差别不大，作者推荐使用`log2()`，因为解释起来比较容易：转换后刻度为1的就是原始数据加倍的，转换后为-1就是原始数据减半的。
 
-*   Offsets: `lead()` and `lag()` allow you to refer to leading or lagging 
-    values. This allows you to compute running differences (e.g. `x - lag(x)`) 
-    or find when values change (`x != lag(x))`. They are most useful in 
-    conjunction with `group_by()`, which you'll learn about shortly.
-    
+*   抵消（Offsets）:`dplyr`包里的 `lead()` 和 `lag()`，可以计算前后移位值（leading or lagging 
+    values）。这可以有利于计算 （running differences），例如`x - lag(x)`，或者发现数值变化(`x != lag(x))`。在配合 `group_by()`函数应用时尤为有用，稍后会学到。
     ```{r}
-    (x <- 1:10)
+    (x <- 1:10)  # 写上括号就是即赋值又在控制台显示。
     lag(x)
     lead(x)
     ```
   
-*   Cumulative and rolling aggregates: R provides functions for running sums,
-    products, mins and maxes: `cumsum()`, `cumprod()`, `cummin()`, `cummax()`; 
-    and dplyr provides `cummean()` for cumulative means. If you need rolling
-    aggregates (i.e. a sum computed over a rolling window), try the RcppRoll
-    package.
+*   累积及循环汇总（Cumulative and rolling aggregates）:R基本包提供累积求和、product，最小值和最大值: `cumsum()`, `cumprod()`, `cummin()`, `cummax()`; dplyr包提供累积求平均值 `cummean()`。如果需要循环汇总(rolling
+    aggregates)，例如 在 rolling window求和, 尝试 RcppRoll包。
     
     ```{r}
     x
@@ -513,12 +502,9 @@ transmute(flights,
     cummean(x)
     ```
 
-*   Logical comparisons, `<`, `<=`, `>`, `>=`, `!=`, which you learned about
-    earlier. If you're doing a complex sequence of logical operations it's 
-    often a good idea to store the interim values in new variables so you can
-    check that each step is working as expected.
+*   逻辑比较, `<`, `<=`, `>`, `>=`, `!=`, 之前学过。如果进行比较复杂的比较，最好新建中间变量，这样不容易出错且容易检查。
 
-*   Ranking: there are a number of ranking functions, but you should 
+*   排序: there are a number of ranking functions, but you should 
     start with `min_rank()`. It does the most usual type of ranking 
     (e.g. 1st, 2nd, 2nd, 4th). The default gives smallest values the small
     ranks; use `desc(x)` to give the largest values the smallest ranks. 
