@@ -7,8 +7,7 @@ categories:
   - R
 tags:
   - R
-draft:
-  TURE
+draft: yes
 ---
 
 [Advanced R](https://adv-r.hadley.nz/data-structures) 原文说的太好了，这里做做练习。

@@ -416,7 +416,7 @@ flights %>% select(dep_delay, dep_delay, dep_delay)
     ```{r}
     select(flights, contains("TIME", ignore.case = FALSE))
     
-    select(flights, "TIME")
+    # select(flights, "TIME")
     
     # 区别在于后面这个选不出来直接一个Error：Strings must match column names. Unknown columns: TIME。前面那样，产生一个多行0列的tibble。
     ```
@@ -504,10 +504,7 @@ transmute(flights,
 
 *   逻辑比较, `<`, `<=`, `>`, `>=`, `!=`, 之前学过。如果进行比较复杂的比较，最好新建中间变量，这样不容易出错且容易检查。
 
-*   排序: there are a number of ranking functions, but you should 
-    start with `min_rank()`. It does the most usual type of ranking 
-    (e.g. 1st, 2nd, 2nd, 4th). The default gives smallest values the small
-    ranks; use `desc(x)` to give the largest values the smallest ranks. 
+*   排序: 有很多中排序方法，可以从 `min_rank()`开始熟悉，它可以完成大部分排序，如 1st, 2nd, 2nd, 4th。默认把最小值给排成最小序号，加上 `desc(x)` 可以反向排序。 
     
     ```{r}
     y <- c(1, 2, 2, NA, 3, 4)
@@ -515,9 +512,9 @@ transmute(flights,
     min_rank(desc(y))
     ```
     
-    If `min_rank()` doesn't do what you need, look at the variants
+    如果`min_rank()`不合适用，还有几个其他函数，如
     `row_number()`, `dense_rank()`, `percent_rank()`, `cume_dist()`,
-    `ntile()`.  See their help pages for more details.
+    `ntile()`，用法详见帮助文档。
     
     ```{r}
     row_number(y)
@@ -526,7 +523,7 @@ transmute(flights,
     cume_dist(y)
     ```
 
-### Exercises
+### 练习
 
 ```{r, eval = FALSE, echo = FALSE}
 flights <- flights %>% mutate(
@@ -541,52 +538,478 @@ ggplot(flights, aes(dep_sched %% 60)) + geom_histogram(binwidth = 1)
 ggplot(flights, aes(air_time - airtime2)) + geom_histogram()
 ```
 
-1.  Currently `dep_time` and `sched_dep_time` are convenient to look at, but
-    hard to compute with because they're not really continuous numbers. 
-    Convert them to a more convenient representation of number of minutes
-    since midnight.
+1.  飞机数据集里的 `dep_time` 和 `sched_dep_time` 看起来很方便，不过不便于计算，因为不是连续的数字，是个很别扭的格式，后两位是分钟，到了60进位，前面的是小时，所以$dep_time和arr_time不能直接加减，把这两个变量进行转换，从凌晨开始按分钟计算。
+
+    ```{r}
+    # 用取整方法，把分钟和小时分开，再加起来。
+mutate(flights,
+       dep_time = (dep_time %/% 100) * 60 + (dep_time %% 100),
+       sched_dep_time = (sched_dep_time %/% 100) * 60 + (sched_dep_time %% 100))
+
+# 用余数
+mutate(flights,
+       dep_time = 60 * floor(dep_time/100) + (dep_time - floor(dep_time/100) * 100),
+       sched_dep_time = 60 * floor(sched_dep_time/100) + (sched_dep_time - floor(sched_dep_time/100) * 100))
+    ```
     
-1.  Compare `air_time` with `arr_time - dep_time`. What do you expect to see?
-    What do you see? What do you need to do to fix it?
+    
+1.  比较 `air_time` 和 `arr_time - dep_time`，你感觉应该是什么结果，实际结果如何？如何修正？
+
+    ```{r}
+    # 本来以为应该一样，结果差别不小。首先因为有些飞机是凌晨前起飞，凌晨后到达，这样减出来的数值肯定不对，甚至会有很多负值。更重要的是上一题也讲过，这里的时间格式有点奇怪，60进位的数字，按正常方法加减肯定不行，得变成连续数字，和air_time一样，都换成纯分钟。
+    # 意外又发生了，本来以为都换成分钟，能够减出来和air time一样的值，可最后得到的数还是不一样，vary
+    
+    flights %>% 
+  mutate(dep_time = (dep_time %/% 100) * 60 + (dep_time %% 100),
+         arr_time = (arr_time %/% 100) * 60 + (arr_time %% 100)) %>%
+  transmute((arr_time - dep_time) - air_time)
+    ```
+    
     
 1.  Compare `dep_time`, `sched_dep_time`, and `dep_delay`. How would you
     expect those three numbers to be related?
+    
+    ```{r}
+    # 和上面的题一样，需要先变成分钟
+    
+    ```
+    
 
 1.  Find the 10 most delayed flights using a ranking function. How do you want 
     to handle ties? Carefully read the documentation for `min_rank()`.
 
 1.  What does `1:3 + 1:10` return? Why?
 
-1.  What trigonometric functions does R provide?
+    ```{r}
+    1:3 + 1:10
+
+    # 循环匹配，最后不够一次就拉倒，有个警告不是整倍数。
+    ```
 
 
+1.  R语言中提供什么三角函数（trigonometric）？
+
+    ```{r}
+    ?Trig
+    ```
 
 
+## 使用 `summarise()`函数进行分类汇总
+
+介绍的最后一个函数是 `summarise()`，它把数据框汇总成**单独一行**。
+
+```{r}
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+(稍后会讲 `na.rm = TRUE` 的意思。)
+
+`summarise()` 本身用处不太多，当和 `group_by()` 配合使用时才会充分散发光辉。配合使用后，计算对象从整个数据框变成了不同的分组，之后在dplyr语境下将会自动按组汇总。例如，如果我们按日期分类，然后运行和上面完全一样的函数，将会得到每日平均值。
+
+```{r}
+by_day <- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+结合 `group_by()` 和 `summarise()` ，将提供给我们工作中使用最多的按组汇总功能。但在深入研究之前，我们先介绍一个很牛逼的新概念：管道（the pipe）.
+
+### 使用管道进行多步操作
+
+假设我们想探索每个地方飞行距离和平均延误时间之间的关系，使用学过的dpl包相关知识，你可能会写出这样的代码：
+
+```{r, fig.width = 6}
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+  count = n(),
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+delay <- filter(delay, count > 20, dest != "HNL")
+
+# It looks like delays increase with distance up to ~750 miles 
+# and then decrease. Maybe as flights get longer there's more 
+# ability to make up delays in the air?
+ggplot(data = delay, mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+```
+
+准备数据分为三步:
+
+1.  按飞行目的地对数据分组。
+
+1.  汇总各组距离、延误时间、飞机数目等。Summarise to compute distance, average delay, and number of flights.
+
+1.  删除噪音点和Honolulu机场，因为它是离群值，太远。
+
+这样的代码太复杂，每个中间变量都需要赋值，而且用过就没用了。命名不容易还得费脑子，降低工作速度。 
+
+管道功能应运而生，专治这种毛病， `%>%`:
+
+```{r}
+delays <- flights %>% 
+  group_by(dest) %>% 
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>% 
+  filter(count > 20, dest != "HNL")
+```
+
+以上专注于变换过程，不管变换的是什么，代码也更容易阅读。读起来是一段富有逻辑且必要的语句：分组、汇总、筛选。在这里，管道函数一个比较合适的读音是"then"，汉语可以读“然后”。
 
 
+上面代码的意思， `x %>% f(y)` 即 `f(x, y)` ， `x %>% f(y) %>% g(z)` 即 `g(f(x, y), z)` 以此类推。通过管道函数的使用，可以避免复杂的嵌套，讲多步操作按照从左到右、从上到下的阅读习惯写出来。我们今后将会经常使用管道函数，提高代码可读性，后面还会在管道函数一章进一步详细讲解。
 
+使用管道函数是融入tidyverse大家庭的重要标准。但在ggplot2里没法用，因为ggplot2编写于作者发现管道函数之前。不幸的是，下一代可以应用管道函数的ggplot2、ggvis，目前还没编写好。
 
+### 缺失值
 
+上面我们设置了一个参数是 `na.rm` ，那么如果没有特意设置它会怎么样？
 
+```{r}
+flights %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay))
+```
 
+发现，算出一堆缺失值来！这是因为本函数遵从大部分汇总函数的原则：如果汇总对象里有缺失值，则汇总结果也是缺失值。幸运的是，所有这些函数里都有一个 `na.rm` 参数，能够在计算时排除缺失值。
 
+```{r}
+flights %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay, na.rm = TRUE))
+```
 
+此例中，缺失值代表取消的航班，我们也可以先把取消的航班去掉。我们将保存这个数据以备之后使用。
 
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
 
+not_cancelled %>% 
+  group_by(year, month, day) %>% 
+  summarise(mean = mean(dep_delay))
+```
 
+### 计数
 
+做任何汇总的时候，做个计数都挺有用，可以直接计数(`n()`)，也可以计数不含缺失值的 (`sum(!is.na(x))`)。这样你能确定有没有基于很小的数据量得出结论。例如，我们看看不同班次的航班，那个平均延误时间最长。
 
+```{r}
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay)
+  )
 
+ggplot(data = delays, mapping = aes(x = delay)) + 
+  geom_freqpoly(binwidth = 10)
+```
 
+哟，发现有些飞机 _平均_ 延误为5小时 (300 分钟)！
 
+实际上，另有隐情。我们可以通过对航班数和平均延误做个散点图来看看到底发生了什么：
 
+```{r}
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay, na.rm = TRUE),
+    n = n()
+  )
 
+ggplot(data = delays, mapping = aes(x = n, y = delay)) + 
+  geom_point(alpha = 1/10)
+```
 
+如我们所料，飞机数目越少的时候，延误时间变异越大。本图形状非常典型：当你对平均值和分组规模作图时，你会发现变异随着样本规模变大而降低。
 
+分析此类作图时，最好先把少数派剔除出来，从而更好的发现主要趋势，而不是被少数派所影响。以下代码即实现这个目标，还会展示如何把ggplot2和dplyr结合运用。但是这里不能用管道函数（ `%>%`），需要用 `+`，当然等你熟悉了以后，这也挺方便的。
 
+```{r}
+delays %>% 
+  filter(n > 25) %>% 
+  ggplot(mapping = aes(x = n, y = delay)) + 
+    geom_point(alpha = 1/10)
+```
 
+--------------------------------------------------------------------------------
 
+RStudio 小窍门: 一个有用的快捷键是 Cmd/Ctrl + Shift + P。它的作用是重新运行你上次运行过的代码框（chunk）。当尝试不同n值得时候这挺有用，比如先用Cmd/Ctrl + Enter运行，然后修改一下n的值，然后再用 Cmd/Ctrl + Shift + P，这时就会重新运行刚才的代码了。——虽然我实在不懂为什么没有再摁一下Cmd/Ctrl + Enter。
 
+--------------------------------------------------------------------------------
+
+此类模式还有一种常见的变种。让我们看看棒球比赛中击球手（batters）的表现与其在比赛中出现的次数是如何相关的。这里使用 __Lahman__ 包中的数据，计算每个主力击球手的平均急求表现（击球次数/尝试次数）。
+
+当我把技巧
+
+When I plot the skill of the batter (measured by the batting average, `ba`) against the number of opportunities to hit the ball (measured by at bat, `ab`), you see two patterns:
+
+1.  As above, the variation in our aggregate decreases as we get more 
+    data points.
+    
+2.  There's a positive correlation between skill (`ba`) and opportunities to 
+    hit the ball (`ab`). This is because teams control who gets to play, 
+    and obviously they'll pick their best players.
+
+```{r}
+# Convert to a tibble so it prints nicely
+batting <- as_tibble(Lahman::Batting)
+
+batters <- batting %>% 
+  group_by(playerID) %>% 
+  summarise(
+    ba = sum(H, na.rm = TRUE) / sum(AB, na.rm = TRUE),
+    ab = sum(AB, na.rm = TRUE)
+  )
+
+batters %>% 
+  filter(ab > 100) %>% 
+  ggplot(mapping = aes(x = ab, y = ba)) +
+    geom_point() + 
+    geom_smooth(se = FALSE)
+```
+
+This also has important implications for ranking. If you naively sort on `desc(ba)`, the people with the best batting averages are clearly lucky, not skilled:
+
+```{r}
+batters %>% 
+  arrange(desc(ba))
+```
+
+You can find a good explanation of this problem at <http://varianceexplained.org/r/empirical_bayes_baseball/> and <http://www.evanmiller.org/how-not-to-sort-by-average-rating.html>.
+
+### Useful summary functions {#summarise-funs}
+
+Just using means, counts, and sum can get you a long way, but R provides many other useful summary functions:
+
+*   Measures of location: we've used `mean(x)`, but `median(x)` is also
+    useful. The mean is the sum divided by the length; the median is a value 
+    where 50% of `x` is above it, and 50% is below it.
+    
+    It's sometimes useful to combine aggregation with logical subsetting. 
+    We haven't talked about this sort of subsetting yet, but you'll learn more
+    about it in [subsetting].
+    
+    ```{r}
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      summarise(
+        avg_delay1 = mean(arr_delay),
+        avg_delay2 = mean(arr_delay[arr_delay > 0]) # the average positive delay
+      )
+    ```
+
+*   Measures of spread: `sd(x)`, `IQR(x)`, `mad(x)`. The mean squared deviation,
+    or standard deviation or sd for short, is the standard measure of spread.
+    The interquartile range `IQR()` and median absolute deviation `mad(x)`
+    are robust equivalents that may be more useful if you have outliers.
+    
+    ```{r}
+    # Why is distance to some destinations more variable than to others?
+    not_cancelled %>% 
+      group_by(dest) %>% 
+      summarise(distance_sd = sd(distance)) %>% 
+      arrange(desc(distance_sd))
+    ```
+  
+*   Measures of rank: `min(x)`, `quantile(x, 0.25)`, `max(x)`. Quantiles
+    are a generalisation of the median. For example, `quantile(x, 0.25)`
+    will find a value of `x` that is greater than 25% of the values,
+    and less than the remaining 75%.
+
+    ```{r}
+    # When do the first and last flights leave each day?
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      summarise(
+        first = min(dep_time),
+        last = max(dep_time)
+      )
+    ```
+  
+*   Measures of position: `first(x)`, `nth(x, 2)`, `last(x)`. These work 
+    similarly to `x[1]`, `x[2]`, and `x[length(x)]` but let you set a default 
+    value if that position does not exist (i.e. you're trying to get the 3rd
+    element from a group that only has two elements). For example, we can
+    find the first and last departure for each day:
+    
+    ```{r}
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      summarise(
+        first_dep = first(dep_time), 
+        last_dep = last(dep_time)
+      )
+    ```
+    
+    These functions are complementary to filtering on ranks. Filtering gives
+    you all variables, with each observation in a separate row:
+    
+    ```{r}
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      mutate(r = min_rank(desc(dep_time))) %>% 
+      filter(r %in% range(r))
+    ```
+
+*   Counts: You've seen `n()`, which takes no arguments, and returns the 
+    size of the current group. To count the number of non-missing values, use
+    `sum(!is.na(x))`. To count the number of distinct (unique) values, use
+    `n_distinct(x)`.
+    
+    ```{r}
+    # Which destinations have the most carriers?
+    not_cancelled %>% 
+      group_by(dest) %>% 
+      summarise(carriers = n_distinct(carrier)) %>% 
+      arrange(desc(carriers))
+    ```
+    
+    Counts are so useful that dplyr provides a simple helper if all you want is 
+    a count:
+    
+    ```{r}
+    not_cancelled %>% 
+      count(dest)
+    ```
+    
+    You can optionally provide a weight variable. For example, you could use 
+    this to "count" (sum) the total number of miles a plane flew:
+    
+    ```{r}
+    not_cancelled %>% 
+      count(tailnum, wt = distance)
+    ```
+  
+*   Counts and proportions of logical values: `sum(x > 10)`, `mean(y == 0)`.
+    When used with numeric functions, `TRUE` is converted to 1 and `FALSE` to 0. 
+    This makes `sum()` and `mean()` very useful: `sum(x)` gives the number of 
+    `TRUE`s in `x`, and `mean(x)` gives the proportion.
+    
+    ```{r}
+    # How many flights left before 5am? (these usually indicate delayed
+    # flights from the previous day)
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      summarise(n_early = sum(dep_time < 500))
+    
+    # What proportion of flights are delayed by more than an hour?
+    not_cancelled %>% 
+      group_by(year, month, day) %>% 
+      summarise(hour_perc = mean(arr_delay > 60))
+    ```
+
+### Grouping by multiple variables
+
+When you group by multiple variables, each summary peels off one level of the grouping. That makes it easy to progressively roll up a dataset:
+
+```{r}
+daily <- group_by(flights, year, month, day)
+(per_day   <- summarise(daily, flights = n()))
+(per_month <- summarise(per_day, flights = sum(flights)))
+(per_year  <- summarise(per_month, flights = sum(flights)))
+```
+
+Be careful when progressively rolling up summaries: it's OK for sums and counts, but you need to think about weighting means and variances, and it's not possible to do it exactly for rank-based statistics like the median. In other words, the sum of groupwise sums is the overall sum, but the median of groupwise medians is not the overall median.
+
+### Ungrouping
+
+If you need to remove grouping, and return to operations on ungrouped data, use `ungroup()`. 
+
+```{r}
+daily %>% 
+  ungroup() %>%             # no longer grouped by date
+  summarise(flights = n())  # all flights
+```
+
+### Exercises
+
+1.  Brainstorm at least 5 different ways to assess the typical delay 
+    characteristics of a group of flights. Consider the following scenarios:
+    
+    * A flight is 15 minutes early 50% of the time, and 15 minutes late 50% of 
+      the time.
+      
+    * A flight is always 10 minutes late.
+
+    * A flight is 30 minutes early 50% of the time, and 30 minutes late 50% of 
+      the time.
+      
+    * 99% of the time a flight is on time. 1% of the time it's 2 hours late.
+    
+    Which is more important: arrival delay or departure delay?
+
+1.  Come up with another approach that will give you the same output as 
+    `not_cancelled %>% count(dest)` and 
+    `not_cancelled %>% count(tailnum, wt = distance)` (without using 
+    `count()`).
+
+1.  Our definition of cancelled flights (`is.na(dep_delay) | is.na(arr_delay)`
+    ) is slightly suboptimal. Why? Which is the most important column?
+
+1.  Look at the number of cancelled flights per day. Is there a pattern?
+    Is the proportion of cancelled flights related to the average delay?
+
+1.  Which carrier has the worst delays? Challenge: can you disentangle the
+    effects of bad airports vs. bad carriers? Why/why not? (Hint: think about
+    `flights %>% group_by(carrier, dest) %>% summarise(n())`)
+
+1.  What does the `sort` argument to `count()` do. When might you use it?
+
+## Grouped mutates (and filters)
+
+Grouping is most useful in conjunction with `summarise()`, but you can also do convenient operations with `mutate()` and `filter()`:
+
+*   Find the worst members of each group:
+
+    ```{r}
+    flights_sml %>% 
+      group_by(year, month, day) %>%
+      filter(rank(desc(arr_delay)) < 10)
+    ```
+
+*   Find all groups bigger than a threshold:
+
+    ```{r}
+    popular_dests <- flights %>% 
+      group_by(dest) %>% 
+      filter(n() > 365)
+    popular_dests
+    ```
+
+*   Standardise to compute per group metrics:
+
+    ```{r}
+    popular_dests %>% 
+      filter(arr_delay > 0) %>% 
+      mutate(prop_delay = arr_delay / sum(arr_delay)) %>% 
+      select(year:day, dest, arr_delay, prop_delay)
+    ```
+
+A grouped filter is a grouped mutate followed by an ungrouped filter. I generally avoid them except for quick and dirty manipulations: otherwise it's hard to check that you've done the manipulation correctly.
+
+Functions that work most naturally in grouped mutates and filters are known as  window functions (vs. the summary functions used for summaries). You can learn more about useful window functions in the corresponding vignette: `vignette("window-functions")`.
+
+### Exercises
+
+1.  Refer back to the lists of useful mutate and filtering functions. 
+    Describe how each operation changes when you combine it with grouping.
+
+1.  Which plane (`tailnum`) has the worst on-time record?
+
+1.  What time of day should you fly if you want to avoid delays as much
+    as possible?
+    
+1.  For each destination, compute the total minutes of delay. For each, 
+    flight, compute the proportion of the total delay for its destination.
+    
+1.  Delays are typically temporally correlated: even once the problem that
+    caused the initial delay has been resolved, later flights are delayed 
+    to allow earlier flights to leave. Using `lag()` explore how the delay
+    of a flight is related to the delay of the immediately preceding flight.
 
 
 
