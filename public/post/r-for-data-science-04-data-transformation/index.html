@@ -140,7 +140,7 @@
 
   
   <span class="article-reading-time">
-    46 min read
+    42 min read
   </span>
   
 
@@ -343,8 +343,24 @@ library(tidyverse)</code></pre>
 <h3>几个比较符号</h3>
 <p>要使用filter，肯定要界定条件，需要这几个比较符号：<code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>!=</code> (不等于), and <code>==</code> (等于)。</p>
 <p>注意， <code>=</code>，和<code>==</code>的区别。前一个是赋值，后一个才是等于，弄错了可能会有错误信息提示。</p>
-<pre class="r"><code>filter(flights, month = 1)</code></pre>
-<pre><code>## Error: `month` (`month = 1`) must not be named, do you need `==`?</code></pre>
+<pre class="r"><code>filter(flights, month == 1)</code></pre>
+<pre><code>## # A tibble: 27,004 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 26,994 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>注意2，当涉及浮点数的时候，计算机算不准。看看开方以后再乘方，或者除不尽的再乘回去的结果：</p>
 <pre class="r"><code>sqrt(2) ^ 2 == 2</code></pre>
 <pre><code>## [1] FALSE</code></pre>
@@ -894,6 +910,8 @@ select(flights, -(year:day))</code></pre>
 <pre class="r"><code># 新的在前面</code></pre>
 <p>另一个可能常会用到的函数是 <code>everything()</code>，如果想把选择出来的列放前面，其他列也保留着，可以这样做。</p>
 <pre class="r"><code>select(flights, time_hour, air_time, everything())</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone &#39;zone/tz/2017c.1.0/
+## zoneinfo/Asia/Shanghai&#39;</code></pre>
 <pre><code>## # A tibble: 336,776 x 19
 ##              time_hour air_time  year month   day dep_time sched_dep_time
 ##                 &lt;dttm&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
@@ -1357,13 +1375,12 @@ ggplot(data = delays, mapping = aes(x = n, y = delay)) +
 <p>RStudio 小窍门: 一个有用的快捷键是 Cmd/Ctrl + Shift + P。它的作用是重新运行你上次运行过的代码框（chunk）。当尝试不同n值得时候这挺有用，比如先用Cmd/Ctrl + Enter运行，然后修改一下n的值，然后再用 Cmd/Ctrl + Shift + P，这时就会重新运行刚才的代码了。——虽然我实在不懂为什么没有再摁一下Cmd/Ctrl + Enter。</p>
 <hr />
 <p>此类模式还有一种常见的变种。让我们看看棒球比赛中击球手（batters）的表现与其在比赛中出现的次数是如何相关的。这里使用 <strong>Lahman</strong> 包中的数据，计算每个主力击球手的平均急求表现（击球次数/尝试次数）。</p>
-<p>当我把技巧</p>
-<p>When I plot the skill of the batter (measured by the batting average, <code>ba</code>) against the number of opportunities to hit the ball (measured by at bat, <code>ab</code>), you see two patterns:</p>
+<p>当我把击球手技巧（以平均击球数 <code>ba</code> 衡量）对击球机会数目（以可击球数 <code>ab</code> 衡量）作图，你会发现两个特征：</p>
 <ol style="list-style-type: decimal">
-<li><p>As above, the variation in our aggregate decreases as we get more data points.</p></li>
-<li><p>There’s a positive correlation between skill (<code>ba</code>) and opportunities to hit the ball (<code>ab</code>). This is because teams control who gets to play, and obviously they’ll pick their best players.</p></li>
+<li><p>如上所示，合计统计的数据点越多，变异越小</p></li>
+<li><p>技能和机会之间存在显著正相关，这是因为球队显然会选择技术好的人做击球手并给他们多传球。</p></li>
 </ol>
-<pre class="r"><code># Convert to a tibble so it prints nicely
+<pre class="r"><code># 先转换为tibble格式，出图漂亮。
 batting &lt;- as_tibble(Lahman::Batting)
 
 batters &lt;- batting %&gt;% 
@@ -1380,7 +1397,7 @@ batters %&gt;%
     geom_smooth(se = FALSE)</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;gam&#39;</code></pre>
 <p><img src="/post/2017-10-09-r-for-data-science-04-data-transformation_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
-<p>This also has important implications for ranking. If you naively sort on <code>desc(ba)</code>, the people with the best batting averages are clearly lucky, not skilled:</p>
+<p>上述分析对排序也有启示，如果简单的对击球数排序（<code>desc(ba)</code>），则最好的击球手变成了不好的:</p>
 <pre class="r"><code>batters %&gt;% 
   arrange(desc(ba))</code></pre>
 <pre><code>## # A tibble: 18,915 x 3
@@ -1397,19 +1414,20 @@ batters %&gt;%
 ##  9 cammaer01     1     1
 ## 10  campsh01     1     1
 ## # ... with 18,905 more rows</code></pre>
-<p>You can find a good explanation of this problem at <a href="http://varianceexplained.org/r/empirical_bayes_baseball/" class="uri">http://varianceexplained.org/r/empirical_bayes_baseball/</a> and <a href="http://www.evanmiller.org/how-not-to-sort-by-average-rating.html" class="uri">http://www.evanmiller.org/how-not-to-sort-by-average-rating.html</a>.</p>
+<p>这两篇博客很好解释了原因： <a href="http://varianceexplained.org/r/empirical_bayes_baseball/" class="uri">http://varianceexplained.org/r/empirical_bayes_baseball/</a> 和 <a href="http://www.evanmiller.org/how-not-to-sort-by-average-rating.html" class="uri">http://www.evanmiller.org/how-not-to-sort-by-average-rating.html</a>。</p>
+<p><strong>说实话本人连要解释什么都没看明白。。。</strong></p>
 </div>
 <div id="summarise-funs" class="section level3">
-<h3>Useful summary functions</h3>
-<p>Just using means, counts, and sum can get you a long way, but R provides many other useful summary functions:</p>
+<h3>常用的汇总函数</h3>
+<p>只用求平均值、计数、求和就能发现一些规律，但R还提供了很多其他的汇总函数：</p>
 <ul>
-<li><p>Measures of location: we’ve used <code>mean(x)</code>, but <code>median(x)</code> is also useful. The mean is the sum divided by the length; the median is a value where 50% of <code>x</code> is above it, and 50% is below it.</p>
-<p>It’s sometimes useful to combine aggregation with logical subsetting. We haven’t talked about this sort of subsetting yet, but you’ll learn more about it in [subsetting].</p>
+<li><p>计算中位数：我们用过了 <code>mean(x)</code>，但中位数函数 <code>median(x)</code> 也很有用。平均值是和除以总个数，而中位数是 50% 的 <code>x</code> 比其高，50% 比其低的这么个数。</p>
+<p>这在逻辑分类中很有用，目前还没涉及，在[subsetting]一节会讲.</p>
 <pre class="r"><code>not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   summarise(
     avg_delay1 = mean(arr_delay),
-    avg_delay2 = mean(arr_delay[arr_delay &gt; 0]) # the average positive delay
+    avg_delay2 = mean(arr_delay[arr_delay &gt; 0]) # 实际延误时间平均值，不含提前的
   )</code></pre>
 <pre><code>## # A tibble: 365 x 5
 ## # Groups:   year, month [?]
@@ -1426,8 +1444,8 @@ batters %&gt;%
 ##  9  2013     1     9 -0.2642777   25.63415
 ## 10  2013     1    10 -5.8988159   27.34545
 ## # ... with 355 more rows</code></pre></li>
-<li><p>Measures of spread: <code>sd(x)</code>, <code>IQR(x)</code>, <code>mad(x)</code>. The mean squared deviation, or standard deviation or sd for short, is the standard measure of spread. The interquartile range <code>IQR()</code> and median absolute deviation <code>mad(x)</code> are robust equivalents that may be more useful if you have outliers.</p>
-<pre class="r"><code># Why is distance to some destinations more variable than to others?
+<li><p>对分布度的描述（Measures of spread）: <code>sd(x)</code>, <code>IQR(x)</code>, <code>mad(x)</code>。方差（sd）是对分布度的标准描述。四分位距<code>IQR(x)</code>和绝对中位差 <code>mad(x)</code>，是在有离群值时候的稳定测量值。</p>
+<pre class="r"><code># 为什么有些目的地航班的飞行距离比其他地方变异更大？
 not_cancelled %&gt;% 
   group_by(dest) %&gt;% 
   summarise(distance_sd = sd(distance)) %&gt;% 
@@ -1446,8 +1464,8 @@ not_cancelled %&gt;%
 ##  9   LAX    9.657195
 ## 10   IND    9.458066
 ## # ... with 94 more rows</code></pre></li>
-<li><p>Measures of rank: <code>min(x)</code>, <code>quantile(x, 0.25)</code>, <code>max(x)</code>. Quantiles are a generalisation of the median. For example, <code>quantile(x, 0.25)</code> will find a value of <code>x</code> that is greater than 25% of the values, and less than the remaining 75%.</p>
-<pre class="r"><code># When do the first and last flights leave each day?
+<li><p>对等级的测量（Measures of rank）： <code>min(x)</code>, <code>quantile(x, 0.25)</code>, <code>max(x)</code>。分位数（Quantiles）是对中位数概念的扩展。例如<code>quantile(x, 0.25)</code>将会找到数值在变量范围的25%-75%之间的<code>x</code>。</p>
+<pre class="r"><code># 每天第一架和最后一架飞机什么时候起飞？
 not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   summarise(
@@ -1469,7 +1487,7 @@ not_cancelled %&gt;%
 ##  9  2013     1     9     2  2252
 ## 10  2013     1    10     3  2320
 ## # ... with 355 more rows</code></pre></li>
-<li><p>Measures of position: <code>first(x)</code>, <code>nth(x, 2)</code>, <code>last(x)</code>. These work similarly to <code>x[1]</code>, <code>x[2]</code>, and <code>x[length(x)]</code> but let you set a default value if that position does not exist (i.e. you’re trying to get the 3rd element from a group that only has two elements). For example, we can find the first and last departure for each day:</p>
+<li><p>选特定位置的值: <code>first(x)</code>, <code>nth(x, 2)</code>, <code>last(x)</code>. 这些函数作用和 <code>x[1]</code>, <code>x[2]</code>, 和 <code>x[length(x)]</code>相似，但能够在没有那个值的时候设定一个默认值（比如在只有2个数值的组中，想调用第3个）。下面我们找每天起飞的第一和最后一架飞机。</p>
 <pre class="r"><code>not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   summarise(
@@ -1491,7 +1509,7 @@ not_cancelled %&gt;%
 ##  9  2013     1     9         2     2252
 ## 10  2013     1    10         3     2320
 ## # ... with 355 more rows</code></pre>
-<p>These functions are complementary to filtering on ranks. Filtering gives you all variables, with each observation in a separate row:</p>
+<p>这些函数是筛选函数的补充，筛选出来的结果是所有变量，每个个体在不同的行里。</p>
 <pre class="r"><code>not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   mutate(r = min_rank(desc(dep_time))) %&gt;% 
@@ -1514,8 +1532,8 @@ not_cancelled %&gt;%
 ## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, r &lt;int&gt;</code></pre></li>
-<li><p>Counts: You’ve seen <code>n()</code>, which takes no arguments, and returns the size of the current group. To count the number of non-missing values, use <code>sum(!is.na(x))</code>. To count the number of distinct (unique) values, use <code>n_distinct(x)</code>.</p>
-<pre class="r"><code># Which destinations have the most carriers?
+<li><p>计数:我们用过<code>n()</code>，这个函数不用任何参数，只是计算组内所有变量的个数。要计算非缺失变量的个数，需要使用<code>sum(!is.na(x))</code>。为了计算有多少不重复的值，要使用<code>n_distinct(x)</code>。</p>
+<pre class="r"><code># 哪些目的地的飞机载客最多？
 not_cancelled %&gt;% 
   group_by(dest) %&gt;% 
   summarise(carriers = n_distinct(carrier)) %&gt;% 
@@ -1534,7 +1552,7 @@ not_cancelled %&gt;%
 ##  9   IAD        6
 ## 10   MSP        6
 ## # ... with 94 more rows</code></pre>
-<p>Counts are so useful that dplyr provides a simple helper if all you want is a count:</p>
+<p>计数很有用。dyplr中提供了一个函数专门用于计数:</p>
 <pre class="r"><code>not_cancelled %&gt;% 
   count(dest)</code></pre>
 <pre><code>## # A tibble: 104 x 2
@@ -1551,7 +1569,7 @@ not_cancelled %&gt;%
 ##  9   BGR   358
 ## 10   BHM   269
 ## # ... with 94 more rows</code></pre>
-<p>You can optionally provide a weight variable. For example, you could use this to “count” (sum) the total number of miles a plane flew:</p>
+<p>如有需要，你可以用本函数计算变量的加和（wt指定加和项），如可以用这个函数去计算（加和）一个飞机飞的里程数。</p>
 <pre class="r"><code>not_cancelled %&gt;% 
   count(tailnum, wt = distance)</code></pre>
 <pre><code>## # A tibble: 4,037 x 2
@@ -1568,9 +1586,8 @@ not_cancelled %&gt;%
 ##  9  N107US  21677
 ## 10  N108UW  32070
 ## # ... with 4,027 more rows</code></pre></li>
-<li><p>Counts and proportions of logical values: <code>sum(x &gt; 10)</code>, <code>mean(y == 0)</code>. When used with numeric functions, <code>TRUE</code> is converted to 1 and <code>FALSE</code> to 0. This makes <code>sum()</code> and <code>mean()</code> very useful: <code>sum(x)</code> gives the number of <code>TRUE</code>s in <code>x</code>, and <code>mean(x)</code> gives the proportion.</p>
-<pre class="r"><code># How many flights left before 5am? (these usually indicate delayed
-# flights from the previous day)
+<li><p>对逻辑值的计数和比例计算：<code>sum(x &gt; 10)</code>, <code>mean(y == 0)</code>。当用于数字函数时，<code>TURE</code>转换为1，<code>FALSE</code>转化为0。如此<code>sum()</code>和<code>mean()</code>等函数非常好用，<code>sum()</code>得到一共有多少个<code>TURE</code>， <code>mean()</code>得到比例是多少。</p>
+<pre class="r"><code># 多少飞机在5am之前起飞？（这经常是前一天晚点的飞机）
 not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   summarise(n_early = sum(dep_time &lt; 500))</code></pre>
@@ -1589,7 +1606,7 @@ not_cancelled %&gt;%
 ##  9  2013     1     9       3
 ## 10  2013     1    10       3
 ## # ... with 355 more rows</code></pre>
-<pre class="r"><code># What proportion of flights are delayed by more than an hour?
+<pre class="r"><code># 晚点超过一小时的飞机占多大比例？
 not_cancelled %&gt;% 
   group_by(year, month, day) %&gt;% 
   summarise(hour_perc = mean(arr_delay &gt; 60))</code></pre>
@@ -1610,9 +1627,9 @@ not_cancelled %&gt;%
 ## # ... with 355 more rows</code></pre></li>
 </ul>
 </div>
-<div id="grouping-by-multiple-variables" class="section level3">
-<h3>Grouping by multiple variables</h3>
-<p>When you group by multiple variables, each summary peels off one level of the grouping. That makes it easy to progressively roll up a dataset:</p>
+<div class="section level3">
+<h3>按多个变量分组</h3>
+<p>当你按多个变量进行分组时，每个汇总在不同层次进行。这对逐步分析数据较为有利。</p>
 <pre class="r"><code>daily &lt;- group_by(flights, year, month, day)
 (per_day   &lt;- summarise(daily, flights = n()))</code></pre>
 <pre><code>## # A tibble: 365 x 4
@@ -1652,43 +1669,43 @@ not_cancelled %&gt;%
 ##    year flights
 ##   &lt;int&gt;   &lt;int&gt;
 ## 1  2013  336776</code></pre>
-<p>Be careful when progressively rolling up summaries: it’s OK for sums and counts, but you need to think about weighting means and variances, and it’s not possible to do it exactly for rank-based statistics like the median. In other words, the sum of groupwise sums is the overall sum, but the median of groupwise medians is not the overall median.</p>
+<p>注意，当逐步进行汇总时，求和和计数不会出问题，但涉及平均值和方差就不能逐层汇总了，基于秩的统计量不能这么算。换句话说，分组的求和和总的求和是一样的，但分组的中位数和总数据的中位数不同也无法转换。</p>
 </div>
-<div id="ungrouping" class="section level3">
-<h3>Ungrouping</h3>
-<p>If you need to remove grouping, and return to operations on ungrouped data, use <code>ungroup()</code>.</p>
+<div class="section level3">
+<h3>取消分组</h3>
+<p>如果需要取消分组，获得不分组的数据，使用<code>ungroup</code>。</p>
 <pre class="r"><code>daily %&gt;% 
-  ungroup() %&gt;%             # no longer grouped by date
-  summarise(flights = n())  # all flights</code></pre>
+  ungroup() %&gt;%             # 不在用日期分组
+  summarise(flights = n())  # 所有飞机</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##   flights
 ##     &lt;int&gt;
 ## 1  336776</code></pre>
 </div>
-<div id="exercises-1" class="section level3">
-<h3>Exercises</h3>
+<div id="-2" class="section level3">
+<h3>练习</h3>
 <ol style="list-style-type: decimal">
-<li><p>Brainstorm at least 5 different ways to assess the typical delay characteristics of a group of flights. Consider the following scenarios:</p>
+<li><p>头脑风暴，想至少5种不同的方法找到每组飞机的典型晚点特征，考虑以下情况：</p>
 <ul>
-<li><p>A flight is 15 minutes early 50% of the time, and 15 minutes late 50% of the time.</p></li>
-<li><p>A flight is always 10 minutes late.</p></li>
-<li><p>A flight is 30 minutes early 50% of the time, and 30 minutes late 50% of the time.</p></li>
-<li><p>99% of the time a flight is on time. 1% of the time it’s 2 hours late.</p></li>
+<li><p>50%的情况提前15分钟，50%的情况晚点15分钟的航班。？？什么鬼</p></li>
+<li><p>总是晚点10分钟的飞机。</p></li>
+<li><p>一家飞机，50%的时间早到30分钟，50%的时间玩到30分钟。？？什么鬼</p></li>
+<li><p>99%的时间该飞机准点，1%的时间晚点2小时。</p></li>
 </ul>
-<p>Which is more important: arrival delay or departure delay?</p></li>
-<li><p>Come up with another approach that will give you the same output as <code>not_cancelled %&gt;% count(dest)</code> and <code>not_cancelled %&gt;% count(tailnum, wt = distance)</code> (without using <code>count()</code>).</p></li>
-<li><p>Our definition of cancelled flights (<code>is.na(dep_delay) | is.na(arr_delay)</code> ) is slightly suboptimal. Why? Which is the most important column?</p></li>
-<li><p>Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?</p></li>
-<li><p>Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about <code>flights %&gt;% group_by(carrier, dest) %&gt;% summarise(n())</code>)</p></li>
-<li><p>What does the <code>sort</code> argument to <code>count()</code> do. When might you use it?</p></li>
+<p>什么更重要，到港晚点还是离港晚点？</p></li>
+<li><p>用另外一种方法实现下面的功能： <code>not_cancelled %&gt;% count(dest)</code> 和 <code>not_cancelled %&gt;% count(tailnum, wt = distance)</code> (不能用 <code>count()</code>).</p></li>
+<li><p>之前我们对取消航班的定义有点啰嗦： (<code>is.na(dep_delay) | is.na(arr_delay)</code> ) 为什么？哪个是最重要的列？</p></li>
+<li><p>查看每天取消的航班数目。有什么规律？取消航班的比例和每天晚点的航班有什么关系？</p></li>
+<li><p>哪个航空公司晚点最严重？挑战：你能分析机场和航空公司对晚点的影响吗？为什么？（提示：<code>flights %&gt;% group_by(carrier, dest) %&gt;% summarise(n())</code>）。</p></li>
+<li><p>函数<code>count()</code>里面的<code>sort</code>参数有什么作用？什么时候可能用到？</p></li>
 </ol>
 </div>
 </div>
-<div id="grouped-mutates-and-filters" class="section level2">
-<h2>Grouped mutates (and filters)</h2>
-<p>Grouping is most useful in conjunction with <code>summarise()</code>, but you can also do convenient operations with <code>mutate()</code> and <code>filter()</code>:</p>
+<div id="-" class="section level2">
+<h2>分组新增变量 (和筛选)</h2>
+<p>分组在与 <code>summarise()</code> 共用最常见，但和 <code>mutate()</code> 和 <code>filter()</code>共用也能有奇效:</p>
 <ul>
-<li><p>Find the worst members of each group:</p>
+<li><p>找到每组中最差的航班:</p>
 <pre class="r"><code>flights_sml %&gt;% 
   group_by(year, month, day) %&gt;%
   filter(rank(desc(arr_delay)) &lt; 10)</code></pre>
@@ -1707,7 +1724,7 @@ not_cancelled %&gt;%
 ##  9  2013     1     1       379       456     1092      222
 ## 10  2013     1     2       224       207      550       94
 ## # ... with 3,296 more rows</code></pre></li>
-<li><p>Find all groups bigger than a threshold:</p>
+<li><p>找到所有比阈值高的分组:</p>
 <pre class="r"><code>popular_dests &lt;- flights %&gt;% 
   group_by(dest) %&gt;% 
   filter(n() &gt; 365)
@@ -1730,7 +1747,7 @@ popular_dests</code></pre>
 ## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
 ## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre></li>
-<li><p>Standardise to compute per group metrics:</p>
+<li><p>对每组矩阵进行标准化计算：</p>
 <pre class="r"><code>popular_dests %&gt;% 
   filter(arr_delay &gt; 0) %&gt;% 
   mutate(prop_delay = arr_delay / sum(arr_delay)) %&gt;% 
@@ -1751,16 +1768,16 @@ popular_dests</code></pre>
 ## 10  2013     1     1   DTW        16 1.157257e-04
 ## # ... with 131,096 more rows</code></pre></li>
 </ul>
-<p>A grouped filter is a grouped mutate followed by an ungrouped filter. I generally avoid them except for quick and dirty manipulations: otherwise it’s hard to check that you’ve done the manipulation correctly.</p>
-<p>Functions that work most naturally in grouped mutates and filters are known as window functions (vs. the summary functions used for summaries). You can learn more about useful window functions in the corresponding vignette: <code>vignette(&quot;window-functions&quot;)</code>.</p>
-<div id="exercises-2" class="section level3">
-<h3>Exercises</h3>
+<p>分组筛选其实是先分组新建变量，再接着进行不分组的筛选。除了类似草纸验算的情况，我一般避免这么做，因为这会对检查是够正确的完成各个环节造成困难。</p>
+<p>分组新建并筛选的功能，最自然的是窗口功能中实现（类似summary函数用于汇总）。你可以在相关的参考中查看更多功能<code>vignette(&quot;window-functions&quot;)</code>。</p>
+<div id="-3" class="section level3">
+<h3>练习</h3>
 <ol style="list-style-type: decimal">
-<li><p>Refer back to the lists of useful mutate and filtering functions. Describe how each operation changes when you combine it with grouping.</p></li>
-<li><p>Which plane (<code>tailnum</code>) has the worst on-time record?</p></li>
-<li><p>What time of day should you fly if you want to avoid delays as much as possible?</p></li>
-<li><p>For each destination, compute the total minutes of delay. For each, flight, compute the proportion of the total delay for its destination.</p></li>
-<li><p>Delays are typically temporally correlated: even once the problem that caused the initial delay has been resolved, later flights are delayed to allow earlier flights to leave. Using <code>lag()</code> explore how the delay of a flight is related to the delay of the immediately preceding flight.</p></li>
+<li><p>请参考新建变量（mutate）和筛选函数，描述在和分组结合使用时各有什么需要注意的地方。</p></li>
+<li><p>哪个航班 (<code>tailnum</code>)晚点记录最多？</p></li>
+<li><p>如果你想避免晚点，最好在一天的哪个时间去乘坐飞机？</p></li>
+<li><p>对每个目的地，计算总的晚点时间。对每个航班，计算晚点时间对到目的地时间的比例。</p></li>
+<li><p>晚点经常有时间上的相关性：即使导致某次航班晚点的原因已经解决了，后面的飞机也要等着前面的飞机飞走以后才能起飞。用<code>lag()</code>探索一个航班的晚点是如何与前一架晚点相关的。</p></li>
 </ol>
 </div>
 </div>
