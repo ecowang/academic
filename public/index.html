@@ -296,6 +296,133 @@
         
           
       
+          
+      
+
+      
+      
+        
+        
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="/post/r-for-data-science-05-script/" itemprop="url">r for data science 05 script</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-12-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-12-22
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/script">script</a
+    >, 
+    
+    <a href="/tags/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    <div class="section level1">
+<h1>工作流程：代码（脚本）</h1>
+<p>我们一直在控制台进行操作，运行代码。控制台运行适合起步，但很快你就会发现如果要运行较为复杂的ggplot2或者dplyr管道函数，在控制台上就容易施展不开了。为了给自己更合适的工作空间，必须使用脚本编辑器。在Rstudio里，可以通过文件菜单，点击新建文件打开编辑器，或者用快捷键打开 （Cmd/Ctrl + Shift + N）。打开以后是下面的样子。</p>
+<p><img src="diagrams/rstudio-editor.png" width="75%" /></p>
+<p>脚本编辑器更适合存放编辑代码。可以继续在控制台做一些试验性的操作，但如果要写有用的代码，就把它们放在编辑器里。退出时，Rstudio会自动保存编写的代码脚本；打开时候还会自动载入上次关闭时打开状态的脚本。当然，随时保存并经常备份脚本还是有必要的。</p>
+<div class="section level2">
+<h2>运行脚本</h2>
+<p>脚本编辑器方便编写复杂的ggplot2作图或dplyr包涉及的操作。高效使用脚本编辑器一定要用快捷键：Cmd/Ctrl + Ente，用来运行当前的脚本。以下面的代码为例，如果你把光标放在█，然后摁Cmd/Ctrl + Entr，将会运行得到<code>not_cancelled</code>的代码，然后光标移到下面，以<code>not_cancelled %&gt;%</code>开始的一行。这就方便你运行全部代码了，只要不断摁快捷键即可。</p>
+<pre class="r"><code>library(dplyr)
+library(nycflights13)
+
+not_cancelled &lt;- flights %&gt;% 
+  filter(!is.na(dep_delay)█, !is.na(arr_delay))
+
+not_cancelled %&gt;% 
+  group_by(year, month, day) %&gt;% 
+  summarise(mean = mean(dep_delay))</code></pre>
+<p>除了按一个个表达式运行，还可以执行所有代码：Cmd/Ctrl + Sjhift + S。这种操作通常用来回顾检查全文中是否有错误。</p>
+<p>我建议大家在编写代码时，先把加载包的语句写在前面。这样当你和其他人分享代码时候，他们能容易看到需要加载什么包。然而注意，你不能写<code>install.packages()</code> 或者 <code>setwd()</code>。改变他人电脑设置的语句是非常反社会的习惯!</p>
+<p>在接下来的学习中，我强烈建议大家在编辑器中练习相关快捷键，慢慢的，这将成为本能，运行代码都不用思考，手指一抖就过去了。</p>
+</div>
+<div id="rstudio" class="section level2">
+<h2>Rstudio诊断</h2>
+<p>脚本编辑器会对脚本错误用红色波浪线标出，并在侧边有叉号提示。</p>
+<p><img src="screenshots/rstudio-diagnostic.png" /><!-- --></p>
+<p>鼠标移到波浪线看是什么错误：</p>
+<p><img src="screenshots/rstudio-diagnostic-tip.png" /><!-- --></p>
+<p>Rstudio还会告诉你问题出现的可能原因。</p>
+<p><img src="screenshots/rstudio-diagnostic-warn.png" /><!-- --></p>
+</div>
+<div class="section level2">
+<h2>练习</h2>
+<ol style="list-style-type: decimal">
+<li><p>到Rstudio的推特<a href="https://twitter.com/rstudiotips" class="uri">https://twitter.com/rstudiotips</a>，找一个有意思的小技巧并练习。</p></li>
+<li><p>有哪些其他常犯的Rstudio错误？参见 <a href="https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics" class="uri">https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics</a>。</p></li>
+</ol>
+</div>
+</div>
+
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/r-for-data-science-05-script/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+
+      
+
+        
+
+        
+        
+
+        
+        
+          
+      
 
       
       
@@ -675,99 +802,6 @@ flights ## # A tibble: 336,776 x 19 ## year month day dep_time sched_dep_time de
   </div>
   <p class="read-more">
     <a href="/post/r-for-data-science-03-some-basics/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-
-      
-
-        
-
-        
-        
-
-        
-        
-          
-      
-          
-      
-
-      
-      
-        
-        
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/r-for-data-science-02-data-visualization/" itemprop="url">学习R for data science - 02 数据可视化</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2017-09-26 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2017-09-26
-    </time>
-  </span>
-
-  
-  <span class="article-reading-time">
-    2 min read
-  </span>
-  
-
-  
-  
-  
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/r">R</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/tags/r">R</a
-    >, 
-    
-    <a href="/tags/data-visualization">Data visualization</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    书接上回，从拟合曲线到花样叠加 ggplot作图可以多图层叠加，拟合的曲线也是叠加的一层图，也就是从画板（ggplot）开始 +画点（geom_point()）再＋画曲线（geom_smooth()）。也就是说
- 想要多的图层，就用加号增加geom_XXX函数就行了
- 明白了这种操作，能做的事情就多了。而且不仅如此，还有很多其他灵活性和功能——让我们再从假设需求开始：
-上面我们用下面的代码做出了这个图，看排量displ和每加仑高速公里数hwy的关系：
-library(ggplot2) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + geom_smooth(mapping = aes(x = displ, y = hwy)) ## `geom_smooth()` using method = &#39;loess&#39; 然后假设我们又想看看几缸的和高速公里数的关系，按说应该老老实实地把上面代码中的displ换成cyl，不过作者说了，这样的话，你需要换两个地方，可能会遗漏。。。把mapping放到ggplot函数里，让它作为一个“全局变量”多好，换一个地方就行了嘛！
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/r-for-data-science-02-data-visualization/" class="btn btn-primary btn-outline">
       CONTINUE READING
     </a>
   </p>

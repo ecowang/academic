@@ -45,11 +45,11 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
 
-  <link rel="canonical" href="/post/advanced-r-01-data-structures/">
+  <link rel="canonical" href="/post/r-for-data-science-05-script/">
 
   
 
-  <title>Advanced R - 01 data structures | 生态网</title>
+  <title>r for data science 05 script | 生态网</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -126,15 +126,15 @@
 
 
   <div class="article-container">
-    <h1 itemprop="name">Advanced R - 01 data structures</h1>
+    <h1 itemprop="name">r for data science 05 script</h1>
     
 
 <div class="article-metadata">
 
   <span class="article-date">
     
-    <time datetime="2017-10-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2017-10-22
+    <time datetime="2017-12-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-12-22
     </time>
   </span>
 
@@ -163,6 +163,9 @@
   <span class="article-tags">
     <i class="fa fa-tags"></i>
     
+    <a href="/tags/script">script</a
+    >, 
+    
     <a href="/tags/r">R</a
     >
     
@@ -176,35 +179,35 @@
   <ul class="share">
     <li>
       <a class="twitter"
-         href="https://twitter.com/intent/tweet?text=Advanced%20R%20-%2001%20data%20structures&amp;url=%2fpost%2fadvanced-r-01-data-structures%2f"
+         href="https://twitter.com/intent/tweet?text=r%20for%20data%20science%2005%20script&amp;url=%2fpost%2fr-for-data-science-05-script%2f"
          target="_blank">
         <i class="fa fa-twitter"></i>
       </a>
     </li>
     <li>
       <a class="facebook"
-         href="https://www.facebook.com/sharer.php?u=%2fpost%2fadvanced-r-01-data-structures%2f"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fr-for-data-science-05-script%2f"
          target="_blank">
         <i class="fa fa-facebook"></i>
       </a>
     </li>
     <li>
       <a class="linkedin"
-         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fadvanced-r-01-data-structures%2f&amp;title=Advanced%20R%20-%2001%20data%20structures"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fr-for-data-science-05-script%2f&amp;title=r%20for%20data%20science%2005%20script"
          target="_blank">
         <i class="fa fa-linkedin"></i>
       </a>
     </li>
     <li>
       <a class="weibo"
-         href="http://service.weibo.com/share/share.php?url=%2fpost%2fadvanced-r-01-data-structures%2f&amp;title=Advanced%20R%20-%2001%20data%20structures"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2fr-for-data-science-05-script%2f&amp;title=r%20for%20data%20science%2005%20script"
          target="_blank">
         <i class="fa fa-weibo"></i>
       </a>
     </li>
     <li>
       <a class="email"
-         href="mailto:?subject=Advanced%20R%20-%2001%20data%20structures&amp;body=%2fpost%2fadvanced-r-01-data-structures%2f">
+         href="mailto:?subject=r%20for%20data%20science%2005%20script&amp;body=%2fpost%2fr-for-data-science-05-script%2f">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -217,16 +220,42 @@
 </div>
 
     <div class="article-style" itemprop="articleBody">
-      <p><a href="https://adv-r.hadley.nz/data-structures">Advanced R</a> 原文说的太好了，这里做做练习。</p>
-<div id="2.1.3" class="section level3">
-<h3>练习2.1.3：</h3>
-<div id="atomic-vector-listatomic-vector" class="section level4">
-<h4>1, atomic vector 的六种类型是什么？list和atomic vector的区别是什么？</h4>
-<p>logic, int, double, character, complex, raw.</p>
-<p>list里面的元素可以不一样，atomic vector里面元素必须一样。</p>
+      <div class="section level1">
+<h1>工作流程：代码（脚本）</h1>
+<p>我们一直在控制台进行操作，运行代码。控制台运行适合起步，但很快你就会发现如果要运行较为复杂的ggplot2或者dplyr管道函数，在控制台上就容易施展不开了。为了给自己更合适的工作空间，必须使用脚本编辑器。在Rstudio里，可以通过文件菜单，点击新建文件打开编辑器，或者用快捷键打开 （Cmd/Ctrl + Shift + N）。打开以后是下面的样子。</p>
+<p><img src="diagrams/rstudio-editor.png" width="75%" /></p>
+<p>脚本编辑器更适合存放编辑代码。可以继续在控制台做一些试验性的操作，但如果要写有用的代码，就把它们放在编辑器里。退出时，Rstudio会自动保存编写的代码脚本；打开时候还会自动载入上次关闭时打开状态的脚本。当然，随时保存并经常备份脚本还是有必要的。</p>
+<div class="section level2">
+<h2>运行脚本</h2>
+<p>脚本编辑器方便编写复杂的ggplot2作图或dplyr包涉及的操作。高效使用脚本编辑器一定要用快捷键：Cmd/Ctrl + Ente，用来运行当前的脚本。以下面的代码为例，如果你把光标放在█，然后摁Cmd/Ctrl + Entr，将会运行得到<code>not_cancelled</code>的代码，然后光标移到下面，以<code>not_cancelled %&gt;%</code>开始的一行。这就方便你运行全部代码了，只要不断摁快捷键即可。</p>
+<pre class="r"><code>library(dplyr)
+library(nycflights13)
+
+not_cancelled &lt;- flights %&gt;% 
+  filter(!is.na(dep_delay)█, !is.na(arr_delay))
+
+not_cancelled %&gt;% 
+  group_by(year, month, day) %&gt;% 
+  summarise(mean = mean(dep_delay))</code></pre>
+<p>除了按一个个表达式运行，还可以执行所有代码：Cmd/Ctrl + Sjhift + S。这种操作通常用来回顾检查全文中是否有错误。</p>
+<p>我建议大家在编写代码时，先把加载包的语句写在前面。这样当你和其他人分享代码时候，他们能容易看到需要加载什么包。然而注意，你不能写<code>install.packages()</code> 或者 <code>setwd()</code>。改变他人电脑设置的语句是非常反社会的习惯!</p>
+<p>在接下来的学习中，我强烈建议大家在编辑器中练习相关快捷键，慢慢的，这将成为本能，运行代码都不用思考，手指一抖就过去了。</p>
 </div>
-<div id="is.vector-is.numeric-is.list-is.character" class="section level4">
-<h4>is.vector(), is.numeric() 和is.list(), is.character()的最根本区别是什么。</h4>
+<div id="rstudio" class="section level2">
+<h2>Rstudio诊断</h2>
+<p>脚本编辑器会对脚本错误用红色波浪线标出，并在侧边有叉号提示。</p>
+<p><img src="screenshots/rstudio-diagnostic.png" /><!-- --></p>
+<p>鼠标移到波浪线看是什么错误：</p>
+<p><img src="screenshots/rstudio-diagnostic-tip.png" /><!-- --></p>
+<p>Rstudio还会告诉你问题出现的可能原因。</p>
+<p><img src="screenshots/rstudio-diagnostic-warn.png" /><!-- --></p>
+</div>
+<div class="section level2">
+<h2>练习</h2>
+<ol style="list-style-type: decimal">
+<li><p>到Rstudio的推特<a href="https://twitter.com/rstudiotips" class="uri">https://twitter.com/rstudiotips</a>，找一个有意思的小技巧并练习。</p></li>
+<li><p>有哪些其他常犯的Rstudio错误？参见 <a href="https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics" class="uri">https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics</a>。</p></li>
+</ol>
 </div>
 </div>
 
@@ -241,6 +270,8 @@
   <h3>Related</h3>
   <ul>
     
+    <li><a href="/post/advanced-r-01-data-structures/">Advanced R - 01 data structures</a></li>
+    
     <li><a href="/post/analyzing-text-data-on-web/">使用R语言分析网络文本数据——以小学生分析过的苏轼为例</a></li>
     
     <li><a href="/post/r-for-data-science-04-data-transformation/">r for data science 04 data transformation</a></li>
@@ -248,8 +279,6 @@
     <li><a href="/post/r-for-data-science-03-some-basics/">学习R for data science - 03 一些基础操作</a></li>
     
     <li><a href="/post/r-for-data-science-02-data-visualization/">学习R for data science - 02 数据可视化</a></li>
-    
-    <li><a href="/post/learn-r-for-data-science-01-data-visualization/">学习R for data science - 01 数据可视化</a></li>
     
   </ul>
 </div>
@@ -259,13 +288,10 @@
   <nav>
   <ul class="pager">
     
-    <li class="previous"><a href="/post/analyzing-text-data-on-web/"><span
-      aria-hidden="true">&larr;</span> 使用R语言分析网络文本数据——以小学生分析过的苏轼为例</a></li>
+    <li class="previous"><a href="/post/advanced-r-01-data-structures/"><span
+      aria-hidden="true">&larr;</span> Advanced R - 01 data structures</a></li>
     
 
-    
-    <li class="next"><a href="/post/r-for-data-science-05-script/">r for data science 05 script <span
-      aria-hidden="true">&rarr;</span></a></li>
     
   </ul>
 </nav>

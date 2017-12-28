@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>/post/r-for-data-science-05-script/</loc>
+      <lastmod>2017-12-22T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/post/advanced-r-01-data-structures/</loc>
       <lastmod>2017-10-22T00:00:00+00:00</lastmod>
     </url>
@@ -153,7 +162,7 @@
     <url>
     
       <loc>/tags/r/</loc>
-      <lastmod>2017-10-22T00:00:00+00:00</lastmod>
+      <lastmod>2017-12-22T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -163,7 +172,7 @@
     <url>
     
       <loc>/categories/r/</loc>
-      <lastmod>2017-10-22T00:00:00+00:00</lastmod>
+      <lastmod>2017-12-22T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -174,6 +183,16 @@
     
       <loc>/tags/r-basics/</loc>
       <lastmod>2017-09-29T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/script/</loc>
+      <lastmod>2017-12-22T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

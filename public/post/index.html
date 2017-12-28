@@ -133,6 +133,116 @@
   
   
   <h3 class="article-title" itemprop="name">
+    <a href="/post/r-for-data-science-05-script/" itemprop="url">r for data science 05 script</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2017-12-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      2017-12-22
+    </time>
+  </span>
+
+  
+  <span class="article-reading-time">
+    1 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+  
+  <span class="article-tags">
+    <i class="fa fa-tags"></i>
+    
+    <a href="/tags/script">script</a
+    >, 
+    
+    <a href="/tags/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    <div class="section level1">
+<h1>工作流程：代码（脚本）</h1>
+<p>我们一直在控制台进行操作，运行代码。控制台运行适合起步，但很快你就会发现如果要运行较为复杂的ggplot2或者dplyr管道函数，在控制台上就容易施展不开了。为了给自己更合适的工作空间，必须使用脚本编辑器。在Rstudio里，可以通过文件菜单，点击新建文件打开编辑器，或者用快捷键打开 （Cmd/Ctrl + Shift + N）。打开以后是下面的样子。</p>
+<p><img src="diagrams/rstudio-editor.png" width="75%" /></p>
+<p>脚本编辑器更适合存放编辑代码。可以继续在控制台做一些试验性的操作，但如果要写有用的代码，就把它们放在编辑器里。退出时，Rstudio会自动保存编写的代码脚本；打开时候还会自动载入上次关闭时打开状态的脚本。当然，随时保存并经常备份脚本还是有必要的。</p>
+<div class="section level2">
+<h2>运行脚本</h2>
+<p>脚本编辑器方便编写复杂的ggplot2作图或dplyr包涉及的操作。高效使用脚本编辑器一定要用快捷键：Cmd/Ctrl + Ente，用来运行当前的脚本。以下面的代码为例，如果你把光标放在█，然后摁Cmd/Ctrl + Entr，将会运行得到<code>not_cancelled</code>的代码，然后光标移到下面，以<code>not_cancelled %&gt;%</code>开始的一行。这就方便你运行全部代码了，只要不断摁快捷键即可。</p>
+<pre class="r"><code>library(dplyr)
+library(nycflights13)
+
+not_cancelled &lt;- flights %&gt;% 
+  filter(!is.na(dep_delay)█, !is.na(arr_delay))
+
+not_cancelled %&gt;% 
+  group_by(year, month, day) %&gt;% 
+  summarise(mean = mean(dep_delay))</code></pre>
+<p>除了按一个个表达式运行，还可以执行所有代码：Cmd/Ctrl + Sjhift + S。这种操作通常用来回顾检查全文中是否有错误。</p>
+<p>我建议大家在编写代码时，先把加载包的语句写在前面。这样当你和其他人分享代码时候，他们能容易看到需要加载什么包。然而注意，你不能写<code>install.packages()</code> 或者 <code>setwd()</code>。改变他人电脑设置的语句是非常反社会的习惯!</p>
+<p>在接下来的学习中，我强烈建议大家在编辑器中练习相关快捷键，慢慢的，这将成为本能，运行代码都不用思考，手指一抖就过去了。</p>
+</div>
+<div id="rstudio" class="section level2">
+<h2>Rstudio诊断</h2>
+<p>脚本编辑器会对脚本错误用红色波浪线标出，并在侧边有叉号提示。</p>
+<p><img src="screenshots/rstudio-diagnostic.png" /><!-- --></p>
+<p>鼠标移到波浪线看是什么错误：</p>
+<p><img src="screenshots/rstudio-diagnostic-tip.png" /><!-- --></p>
+<p>Rstudio还会告诉你问题出现的可能原因。</p>
+<p><img src="screenshots/rstudio-diagnostic-warn.png" /><!-- --></p>
+</div>
+<div class="section level2">
+<h2>练习</h2>
+<ol style="list-style-type: decimal">
+<li><p>到Rstudio的推特<a href="https://twitter.com/rstudiotips" class="uri">https://twitter.com/rstudiotips</a>，找一个有意思的小技巧并练习。</p></li>
+<li><p>有哪些其他常犯的Rstudio错误？参见 <a href="https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics" class="uri">https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics</a>。</p></li>
+</ol>
+</div>
+</div>
+
+    
+  </div>
+  <p class="read-more">
+    <a href="/post/r-for-data-science-05-script/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+  
+    
+    
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
     <a href="/post/advanced-r-01-data-structures/" itemprop="url">Advanced R - 01 data structures</a>
   </h3>
   
@@ -860,72 +970,17 @@ git 六脉神剑(目前就用过这几个囧)
 </div>
 
   
+
+  
+<nav>
+  <ul class="pager">
     
     
-
-<div class="article-list-item" itemscope itemprop="blogPost">
-  
-  
-  <h3 class="article-title" itemprop="name">
-    <a href="/post/principal-response-curve-in-ecological-analysis/" itemprop="url">使用主响应曲线方法（principal response curve analysis）分析刺槐数据</a>
-  </h3>
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
+    <li><a href="/post/page/2/">&gt;</a></li>
     
-    <time datetime="2015-01-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-      2015-01-22
-    </time>
-  </span>
+  </ul>
+</nav>
 
-  
-  <span class="article-reading-time">
-    2 min read
-  </span>
-  
-
-  
-  
-  
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/%e7%bb%9f%e8%ae%a1-%e7%94%9f%e6%80%81">统计 生态</a
-    >
-    
-  </span>
-  
-  
-
-  
-  
-  
-  
-
-  
-
-</div>
-
-  <div class="article-style" itemprop="articleBody">
-    
-    说起来，主响应曲线分析已经帮了自己2次了。一次是发表了一篇SCI论文，即Using microbial community functioning as the complementary environmental condition indicator，用来分析了BIOLOG数据，另一次就是在窄冠刺槐的课题中用了这种方法，增强了点科技感。搜了搜似乎网上还没有针对生态学分析中利用这种方法的中文的介绍，这里简单写一下，当作自己网站的第一篇原创文章。
-一、分析目标 针对多元数据，且在一个时间段内有连续的记录，分析在这个过程中有整体什么差异，且能展现这些差异是由哪些指标主要引起的。 这么说有点抽象，举个例子吧。比如有6个不同刺槐品种，从种下来开始，就测量胸径、树高、郁闭度、枝下高等指标，每年测量，一直测量了10年。不同品种肯定有差异，但这些差异在这10年里是怎么变化的呢？当然我可以单独拿出一个指标来，比如胸径，比较十年的变化，但这种比较不具有整体性。为了从整体上把不同品种的生长特征在这10年间的变化刻画出来，就可以使用PRC方法。它其实是一种基于降维的方法，在刻画出每个时间节点的主要特征后，在时间序列上表现出来。出处是Principal Response Curves: Analysis of Time-dependent Multivariate Responses of a Biological Community to Stress.van den Brink, P. J. &amp; ter Braak, C. J. F. (1999)。
- 二、数据准备 数据准备，行为case，列为variable。即行是测定对象，列是指标。
-cihuai = read.table(&quot;PRC analysis data.txt&quot;, header = T, sep=&quot;\t&quot;, fileEncoding=&quot;UTF-16&quot;) head(cihuai) ## X dens hight DBH Crown UBhigh Closure ## 1 c1-1-1 833 1.55 1.29 0.52 0.39 0.05 ## 2 c1-1-2 833 1.
-    
-  </div>
-  <p class="read-more">
-    <a href="/post/principal-response-curve-in-ecological-analysis/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-
-  
 
 
 </div>

@@ -1,0 +1,53 @@
+---
+title: r for data science 05 script
+author: 王强
+date: '2017-12-22'
+slug: r-for-data-science-05-script
+categories:
+  - R
+tags:
+  - script
+  - R
+draft: yes
+---
+
+
+
+<div class="section level1">
+<h1>工作流程：代码（脚本）</h1>
+<p>我们一直在控制台进行操作，运行代码。控制台运行适合起步，但很快你就会发现如果要运行较为复杂的ggplot2或者dplyr管道函数，在控制台上就容易施展不开了。为了给自己更合适的工作空间，必须使用脚本编辑器。在Rstudio里，可以通过文件菜单，点击新建文件打开编辑器，或者用快捷键打开 （Cmd/Ctrl + Shift + N）。打开以后是下面的样子。</p>
+<p><img src="diagrams/rstudio-editor.png" width="75%" /></p>
+<p>脚本编辑器更适合存放编辑代码。可以继续在控制台做一些试验性的操作，但如果要写有用的代码，就把它们放在编辑器里。退出时，Rstudio会自动保存编写的代码脚本；打开时候还会自动载入上次关闭时打开状态的脚本。当然，随时保存并经常备份脚本还是有必要的。</p>
+<div class="section level2">
+<h2>运行脚本</h2>
+<p>脚本编辑器方便编写复杂的ggplot2作图或dplyr包涉及的操作。高效使用脚本编辑器一定要用快捷键：Cmd/Ctrl + Ente，用来运行当前的脚本。以下面的代码为例，如果你把光标放在█，然后摁Cmd/Ctrl + Entr，将会运行得到<code>not_cancelled</code>的代码，然后光标移到下面，以<code>not_cancelled %&gt;%</code>开始的一行。这就方便你运行全部代码了，只要不断摁快捷键即可。</p>
+<pre class="r"><code>library(dplyr)
+library(nycflights13)
+
+not_cancelled &lt;- flights %&gt;% 
+  filter(!is.na(dep_delay)█, !is.na(arr_delay))
+
+not_cancelled %&gt;% 
+  group_by(year, month, day) %&gt;% 
+  summarise(mean = mean(dep_delay))</code></pre>
+<p>除了按一个个表达式运行，还可以执行所有代码：Cmd/Ctrl + Sjhift + S。这种操作通常用来回顾检查全文中是否有错误。</p>
+<p>我建议大家在编写代码时，先把加载包的语句写在前面。这样当你和其他人分享代码时候，他们能容易看到需要加载什么包。然而注意，你不能写<code>install.packages()</code> 或者 <code>setwd()</code>。改变他人电脑设置的语句是非常反社会的习惯!</p>
+<p>在接下来的学习中，我强烈建议大家在编辑器中练习相关快捷键，慢慢的，这将成为本能，运行代码都不用思考，手指一抖就过去了。</p>
+</div>
+<div id="rstudio" class="section level2">
+<h2>Rstudio诊断</h2>
+<p>脚本编辑器会对脚本错误用红色波浪线标出，并在侧边有叉号提示。</p>
+<p><img src="screenshots/rstudio-diagnostic.png" /><!-- --></p>
+<p>鼠标移到波浪线看是什么错误：</p>
+<p><img src="screenshots/rstudio-diagnostic-tip.png" /><!-- --></p>
+<p>Rstudio还会告诉你问题出现的可能原因。</p>
+<p><img src="screenshots/rstudio-diagnostic-warn.png" /><!-- --></p>
+</div>
+<div class="section level2">
+<h2>练习</h2>
+<ol style="list-style-type: decimal">
+<li><p>到Rstudio的推特<a href="https://twitter.com/rstudiotips" class="uri">https://twitter.com/rstudiotips</a>，找一个有意思的小技巧并练习。</p></li>
+<li><p>有哪些其他常犯的Rstudio错误？参见 <a href="https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics" class="uri">https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics</a>。</p></li>
+</ol>
+</div>
+</div>
