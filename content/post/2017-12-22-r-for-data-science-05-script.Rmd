@@ -8,7 +8,6 @@ categories:
 tags:
   - script
   - R
-draft: yes
 ---
 
 # 工作流程：代码（脚本）
